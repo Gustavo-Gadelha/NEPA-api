@@ -35,7 +35,10 @@ def create_app(env: str = None) -> Flask:
     from app.handlers import register_error_handlers
     register_error_handlers(app)
 
+    from app.jwt_callbacks import register_jwt_callbacks
+    register_jwt_callbacks(jwt)
+
     from app import models
-    from app import schemas
+    from app import schemas 
 
     return app
