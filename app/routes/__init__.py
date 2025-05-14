@@ -16,5 +16,5 @@ blueprints = {
 
 
 def register_blueprints(app: Flask) -> None:
-    for route, prefix in blueprints.items():
-        app.register_blueprint(route, url_prefix=prefix)
+    for bp, prefix in blueprints.items():
+        app.register_blueprint(bp, url_prefix=prefix)
