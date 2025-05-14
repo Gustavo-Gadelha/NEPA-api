@@ -1,5 +1,5 @@
 import pytest
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 from app import create_app, db as _db
 
@@ -22,17 +22,12 @@ def db(app):
 
 @pytest.fixture
 def db_session(db):
-    connection = db.engine.connect()
-    transaction = connection.begin()
-    session_maker = sessionmaker(bind=connection)
-    session = session_maker()
+    Session = scoped_session(sessionmaker(bind=db.engine))
 
     try:
-        yield session
+        yield Session()
     finally:
-        session.close()
-        transaction.rollback()
-        connection.close()
+        Session.remove()
 
 
 @pytest.fixture
