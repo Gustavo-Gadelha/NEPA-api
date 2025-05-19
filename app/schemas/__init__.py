@@ -1,28 +1,27 @@
-from marshmallow import Schema
+from .common import (
+    CursoInSchema, CursoOutSchema
+)
 
-from .curso_schema import CursoSchema
-from .edital_schema import EditalSchema
-from .frequencias import ControleMensalSchema, FrequenciaSemanalSchema, PresencaSchema
-from .projeto import InscricaoSchema, AtividadeSchema, ProjetoSchema
-from .relatorios import AnexoSchema, RelatorioBolsistaSchema, RelatorioCoordenadorSchema
-from .usuarios import AdminSchema, AlunoSchema, ProfessorSchema, UsuarioSchema
+from .documentos import (
+    EditalInSchema, EditalOutSchema,
+    RelatorioBolsistaInSchema, RelatorioBolsistaOutSchema,
+    RelatorioCoordenadorInSchema, RelatorioCoordenadorOutSchema
+)
 
-curso_schema: Schema = CursoSchema()
-edital_schema: Schema = EditalSchema()
+from .frequencias import (
+    FrequenciaSemanalInSchema, FrequenciaSemanalOutSchema,
+    PresencaInSchema, PresencaOutSchema
+)
 
-controle_mensal_schema: Schema = ControleMensalSchema()
-frequencia_semanal_schema: Schema = FrequenciaSemanalSchema()
-presenca_schema: Schema = PresencaSchema()
+from .projeto import (
+    AtividadeInSchema, AtividadeOutSchema,
+    InscricaoInSchema, InscricaoOutSchema,
+    ProjetoInSchema, ProjetoOutSchema
+)
 
-inscricao_schema: Schema = InscricaoSchema()
-atividade_schema: Schema = AtividadeSchema()
-projeto_schema: Schema = ProjetoSchema()
-
-anexo_schema: Schema = AnexoSchema()
-relatorio_bolsista_schema: Schema = RelatorioBolsistaSchema()
-relatorio_coordenador_schema: Schema = RelatorioCoordenadorSchema()
-
-admin_schema: Schema = AdminSchema()
-aluno_schema: Schema = AlunoSchema()
-professor_schema: Schema = ProfessorSchema()
-usuario_schema: Schema = UsuarioSchema()
+from .usuarios import (
+    AdminInSchema, AdminOutSchema,
+    AlunoInSchema, AlunoOutSchema,
+    ProfessorInSchema, ProfessorOutSchema,
+    UsuarioInSchema, UsuarioOutSchema
+)

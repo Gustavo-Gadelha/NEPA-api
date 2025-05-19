@@ -1,5 +1,3 @@
-from .inscricao_schema import InscricaoSchema
-from .atividade_schema import AtividadeSchema
-from .projeto_schema import ProjetoSchema
-
-__all__ = ['InscricaoSchema', 'AtividadeSchema', 'ProjetoSchema']
+from .atividade_schemas import AtividadeInSchema, AtividadeOutSchema
+from .inscricao_schemas import InscricaoInSchema, InscricaoOutSchema
+from .projeto_schemas import ProjetoInSchema, ProjetoOutSchema
