@@ -1,15 +1,16 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify
 from flask_jwt_extended import current_user, jwt_required
+from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
 from app.config import PASSWORD_LENGTH
 from app.decorators import requires_any
 from app.models import Professor
 from app.models.enums import Autoridade
-from app.schemas import professor_schema
+from app.schemas import professor_schema, ProfessorSchema
 from app.services.usuarios import professor_service, usuario_service
 
-professor_bp = Blueprint('professor', __name__)
+professor_bp = Blueprint('professor', __name__, description='Rotas que modificam professores')
 
 
 @professor_bp.before_request
@@ -22,6 +23,8 @@ def checar_usuario():
 
 
 @professor_bp.route('/', methods=['POST'])
+@professor_bp.arguments(ProfessorSchema)
+@professor_bp.response(201, ProfessorSchema)
 @requires_any(Autoridade.ADMIN)
 def criar_professor():
     dados = request.json
@@ -31,6 +34,7 @@ def criar_professor():
 
 
 @professor_bp.route('/', methods=['GET'])
+@professor_bp.response(200, ProfessorSchema(many=True))
 @requires_any(Autoridade.ADMIN)
 def listar_professores():
     professores: list[Professor] = professor_service.get_all()
@@ -38,6 +42,7 @@ def listar_professores():
 
 
 @professor_bp.route('/<uuid:professor_id>', methods=['GET'])
+@professor_bp.response(200, ProfessorSchema)
 @requires_any(Autoridade.ADMIN)
 def exibir_professor_id(professor_id):
     professor: Professor = professor_service.get_or_404(professor_id)
@@ -45,6 +50,7 @@ def exibir_professor_id(professor_id):
 
 
 @professor_bp.route('/<uuid:professor_id>', methods=['DELETE'])
+@professor_bp.response(200)
 @requires_any(Autoridade.ADMIN)
 def deletar_professor(professor_id):
     professor_service.delete(professor_id)
@@ -52,30 +58,35 @@ def deletar_professor(professor_id):
 
 
 @professor_bp.route('/<uuid:professor_id>/ativar', methods=['POST'])
+@professor_bp.response(200)
 def ativar_professor(professor_id):
     usuario_service.activate(professor_id)
     return jsonify({'message': 'Professor ativado com sucesso'}), 200
 
 
 @professor_bp.route('/<uuid:professor_id>/desativar', methods=['POST'])
+@professor_bp.response(200)
 def desativar_professor(professor_id):
     usuario_service.deactivate(professor_id)
     return jsonify({'message': 'Professor desativado com sucesso'}), 200
 
 
 @professor_bp.route('/ativos', methods=['GET'])
+@professor_bp.response(200, ProfessorSchema(many=True))
 def listar_professores_ativos():
     professores: list[Professor] = professor_service.get_all_active()
     return jsonify(professor_schema.dump(professores, many=True)), 200
 
 
 @professor_bp.route('/desativos', methods=['GET'])
+@professor_bp.response(200, ProfessorSchema(many=True))
 def listar_professores_desativos():
     professores: list[Professor] = professor_service.get_all_inactive()
     return jsonify(professor_schema.dump(professores, many=True)), 200
 
 
 @professor_bp.route('/<uuid:professor_id>/senha>', methods=['PATCH'])
+@professor_bp.response(200)
 @requires_any(Autoridade.ADMIN)
 def redefinir_senha_professor(professor_id):
     dados = request.json

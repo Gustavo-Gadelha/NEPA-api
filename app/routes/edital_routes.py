@@ -1,17 +1,18 @@
 from pathlib import Path
 
-from flask import request, jsonify, send_file, Blueprint
+from flask import request, jsonify, send_file
 from flask_jwt_extended import current_user, jwt_required
+from flask_smorest import Blueprint
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import Forbidden
 
 from app.decorators import requires_any
 from app.models import Edital
 from app.models.enums import Autoridade
-from app.schemas import edital_schema
+from app.schemas import edital_schema, EditalSchema
 from app.services import edital_service
 
-edital_bp = Blueprint('edital', __name__)
+edital_bp = Blueprint('edital', __name__, description='Rotas que modificam editais')
 
 
 @edital_bp.before_request
@@ -24,6 +25,8 @@ def checar_usuario():
 
 
 @edital_bp.route('/', methods=['POST'])
+@edital_bp.arguments(EditalSchema)
+@edital_bp.response(201, EditalSchema)
 @requires_any(Autoridade.ADMIN)
 def criar_edital():
     arquivo: FileStorage | None = request.files.get('file')
@@ -40,6 +43,7 @@ def criar_edital():
 
 
 @edital_bp.route('/', methods=['GET'])
+@edital_bp.response(200, EditalSchema(many=True))
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
 def listar_editais():
     editais: list[Edital] = edital_service.get_all()
@@ -47,6 +51,7 @@ def listar_editais():
 
 
 @edital_bp.route('/<uuid:edital_id>', methods=['GET'])
+@edital_bp.response(200)
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
 def exibir_edital_id(edital_id):
     caminho_arquivo: Path = edital_service.abs_path_to(edital_id)
@@ -57,6 +62,7 @@ def exibir_edital_id(edital_id):
 
 
 @edital_bp.route('/<string:slug>', methods=['GET'])
+@edital_bp.response(200)
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
 def exibir_edital_slug(slug):
     caminho_arquivo: Path = edital_service.abs_path_to_by_slug(slug)
@@ -67,6 +73,7 @@ def exibir_edital_slug(slug):
 
 
 @edital_bp.route('/<uuid:edital_id>', methods=['DELETE'])
+@edital_bp.response(200)
 @requires_any(Autoridade.ADMIN)
 def deletar_edital(edital_id):
     edital_service.delete(edital_id)

@@ -1,15 +1,16 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify
 from flask_jwt_extended import current_user, jwt_required
+from flask_smorest import Blueprint
 from werkzeug.exceptions import BadRequest, Forbidden
 
 from app import db
 from app.decorators import requires_any
 from app.models import Projeto, AlunoProjeto
 from app.models.enums import Autoridade, Situacao
-from app.schemas import projeto_schema, aluno_projeto_schema
+from app.schemas import projeto_schema, aluno_projeto_schema, ProjetoSchema, AlunoProjetoSchema
 from app.services.projeto import projeto_service, aluno_projeto_service
 
-projeto_bp = Blueprint('projeto', __name__)
+projeto_bp = Blueprint('projeto', __name__, description='Rotas que modificam professores')
 
 
 @projeto_bp.before_request
@@ -22,6 +23,8 @@ def checar_usuario():
 
 
 @projeto_bp.route('/', methods=['POST'])
+@projeto_bp.arguments(ProjetoSchema)
+@projeto_bp.response(201, ProjetoSchema)
 @requires_any(Autoridade.PROFESSOR)
 def criar_projeto():
     dados = request.json
@@ -31,6 +34,7 @@ def criar_projeto():
 
 
 @projeto_bp.route('/', methods=['GET'])
+@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN, Autoridade.ALUNO)
 def listar_projetos():
     projetos: list[Projeto] = projeto_service.get_all()
@@ -38,6 +42,7 @@ def listar_projetos():
 
 
 @projeto_bp.route('/me', methods=['GET'])
+@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.PROFESSOR)
 def listar_projetos_do_usuario():
     projetos: list[Projeto] = projeto_service.get_all_from(current_user.id)
@@ -45,6 +50,7 @@ def listar_projetos_do_usuario():
 
 
 @projeto_bp.route('/<uuid:projeto_id>', methods=['GET'])
+@projeto_bp.response(200, ProjetoSchema)
 @requires_any(Autoridade.ADMIN, Autoridade.ALUNO)
 def exibir_projeto_id(projeto_id):
     projeto: Projeto = projeto_service.get_or_404(projeto_id)
@@ -52,6 +58,7 @@ def exibir_projeto_id(projeto_id):
 
 
 @projeto_bp.route('/<uuid:projeto_id>', methods=['DELETE'])
+@projeto_bp.response(200)
 @requires_any(Autoridade.ADMIN)
 def deletar_projeto(projeto_id):
     projeto_service.delete(projeto_id)
@@ -59,6 +66,7 @@ def deletar_projeto(projeto_id):
 
 
 @projeto_bp.route('/<uuid:projeto_id>/situacao', methods=['PATCH'])
+@projeto_bp.response(200, ProjetoSchema)
 def mudar_situacao_projeto(projeto_id):
     dados = request.json
     situacao = dados.get('situacao')
@@ -71,6 +79,7 @@ def mudar_situacao_projeto(projeto_id):
 
 
 @projeto_bp.route('/aprovados', methods=['GET'])
+@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN)
 def listar_projetos_aprovados():
     projetos: list[Projeto] = projeto_service.get_all_approved()
@@ -78,6 +87,7 @@ def listar_projetos_aprovados():
 
 
 @projeto_bp.route('/pendentes', methods=['GET'])
+@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN)
 def listar_projetos_pendentes():
     projetos: list[Projeto] = projeto_service.get_all_pending()
@@ -85,6 +95,7 @@ def listar_projetos_pendentes():
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos', methods=['GET'])
+@projeto_bp.response(200, AlunoProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
 def listar_alunos_por_projeto(projeto_id):
     projeto: Projeto = projeto_service.get_or_404(projeto_id)
@@ -92,6 +103,7 @@ def listar_alunos_por_projeto(projeto_id):
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos/<uuid:aluno_id>', methods=['POST'])
+@projeto_bp.response(200, AlunoProjetoSchema)
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
 def cadastrar_aluno(projeto_id, aluno_id):
     projeto: Projeto = projeto_service.get_or_404(projeto_id)
@@ -118,6 +130,7 @@ def cadastrar_aluno(projeto_id, aluno_id):
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos/<uuid:aluno_id>/aprovar', methods=['POST'])
+@projeto_bp.response(200, AlunoProjetoSchema)
 @requires_any(Autoridade.PROFESSOR)
 def aprovar_aluno_no_projeto(projeto_id, aluno_id):
     aluno_projeto = aluno_projeto_service.approve(aluno_id, projeto_id)
@@ -125,6 +138,7 @@ def aprovar_aluno_no_projeto(projeto_id, aluno_id):
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos/<uuid:aluno_id>/rejeitar', methods=['POST'])
+@projeto_bp.response(200, AlunoProjetoSchema)
 @requires_any(Autoridade.PROFESSOR)
 def alterar_aluno_projeto(projeto_id, aluno_id):
     aluno_projeto = aluno_projeto_service.reject(aluno_id, projeto_id)

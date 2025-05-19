@@ -27,6 +27,12 @@ PASSWORD_LENGTH: int = 8
 
 
 class _Config(object):
+    API_TITLE: str = os.getenv('API_TITLE')
+    API_VERSION: str = os.getenv('API_VERSION')
+    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
+    OPENAPI_URL_PREFIX: str = os.getenv('OPENAPI_URL_PREFIX')
+    OPENAPI_SWAGGER_UI_PATH: str = os.getenv('OPENAPI_SWAGGER_UI_PATH')
+    OPENAPI_SWAGGER_UI_URL: str = os.getenv('OPENAPI_SWAGGER_UI_URL')
     SECRET_KEY: str = os.getenv('SECRET_KEY')
     JWT_SECRET: str = os.getenv('JWT_SECRET')
     MAX_CONTENT_LENGTH: int = int(os.getenv('MAX_CONTENT_LENGHT', MAX_FILE_SIZE))

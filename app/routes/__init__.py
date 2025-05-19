@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_smorest import Api
 
 from .aluno_routes import aluno_bp
 from .auth_routes import auth_bp
@@ -15,6 +16,6 @@ blueprints = {
 }
 
 
-def register_blueprints(app: Flask) -> None:
+def register_blueprints(api: Api) -> None:
     for bp, prefix in blueprints.items():
-        app.register_blueprint(bp, url_prefix=prefix)
+        api.register_blueprint(bp, url_prefix=prefix)

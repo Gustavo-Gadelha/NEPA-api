@@ -1,15 +1,16 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify
 from flask_jwt_extended import current_user, jwt_required
+from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
 from app.config import PASSWORD_LENGTH
 from app.decorators import requires_any
 from app.models import Aluno
 from app.models.enums import Autoridade
-from app.schemas import aluno_schema
+from app.schemas import aluno_schema, AlunoSchema
 from app.services.usuarios import aluno_service, usuario_service
 
-aluno_bp = Blueprint('aluno', __name__)
+aluno_bp = Blueprint('aluno', __name__, description='Rotas que modificam alunos')
 
 
 @aluno_bp.before_request
@@ -22,6 +23,8 @@ def checar_usuario():
 
 
 @aluno_bp.route('/', methods=['POST'])
+@aluno_bp.arguments(AlunoSchema)
+@aluno_bp.response(201, AlunoSchema)
 @requires_any(Autoridade.ADMIN)
 def criar_aluno():
     dados = request.json
@@ -31,6 +34,7 @@ def criar_aluno():
 
 
 @aluno_bp.route('/', methods=['GET'])
+@aluno_bp.response(200, AlunoSchema(many=True))
 @requires_any(Autoridade.ADMIN)
 def listar_alunos():
     alunos: list[Aluno] = aluno_service.get_all()
@@ -38,6 +42,7 @@ def listar_alunos():
 
 
 @aluno_bp.route('/<uuid:aluno_id>', methods=['GET'])
+@aluno_bp.response(200, AlunoSchema)
 @requires_any(Autoridade.ADMIN)
 def exibir_aluno_id(aluno_id):
     aluno: Aluno = aluno_service.get_or_404(aluno_id)
@@ -45,6 +50,7 @@ def exibir_aluno_id(aluno_id):
 
 
 @aluno_bp.route('/<uuid:aluno_id>', methods=['DELETE'])
+@aluno_bp.response(200)
 @requires_any(Autoridade.ADMIN)
 def deletar_aluno(aluno_id):
     aluno_service.delete(aluno_id)

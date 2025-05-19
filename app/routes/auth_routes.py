@@ -1,14 +1,15 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
+from flask_smorest import Blueprint
 from werkzeug.exceptions import BadRequest
 
 from app.services import auth_service
 from app.services.usuarios import professor_service, aluno_service
-from tests.fixtures.models import professor
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, description='Rotas de autenticação')
 
 
 @auth_bp.route('/login', methods=['POST'])
+@auth_bp.response(200)
 def auth_login():
     dados = request.json
     login = dados.get('login')
@@ -28,6 +29,7 @@ def auth_login():
 
 
 @auth_bp.route('/cadastrar', methods=['POST'])
+@auth_bp.response(200)
 def auth_register():
     dados = request.json
     tipo = dados.get('tipo', '')

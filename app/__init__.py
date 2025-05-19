@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
-from app.extensions import db, migrate, jwt, argon2
+from app.extensions import db, migrate, jwt, argon2, api
 
 
 def create_app(env: str = None) -> Flask:
@@ -24,13 +24,14 @@ def create_app(env: str = None) -> Flask:
     migrate.init_app(app, db)
     jwt.init_app(app)
     argon2.init_app(app)
+    api.init_app(app)
 
     # Reference for Flask-CORS configuration and usage:
     # https://corydolphin.com/flask-cors/extension/
     CORS(app)
 
     from app.routes import register_blueprints
-    register_blueprints(app)
+    register_blueprints(api)
 
     from app.handlers import register_error_handlers
     register_error_handlers(app)
