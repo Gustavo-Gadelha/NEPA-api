@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models import Usuario
+from app.models.usuarios.usuario import Usuario
 from app.models.enums import Autoridade
 
 
