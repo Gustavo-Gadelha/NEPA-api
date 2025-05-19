@@ -89,7 +89,7 @@ def projeto(db_session, professor, curso):
         situacao=Situacao.EM_ANDAMENTO,
         titulacao='Doutor',
         linha_de_pesquisa='Tecnologia',
-        vagas=20,
+        vagas_totais=20,
         palavras_chave='teste, educação',
         localizacao='Universidade X',
         populacao='Estudantes',

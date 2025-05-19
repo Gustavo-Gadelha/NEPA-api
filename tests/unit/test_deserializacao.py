@@ -71,7 +71,7 @@ def test_projeto_deserialization(professor):
         'situacao': 'EM_ANDAMENTO',
         'titulacao': 'Doutor',
         'linha_de_pesquisa': 'Tecnologia',
-        'vagas': 20,
+        'vagas_totais': 20,
         'palavras_chave': 'teste, educação',
         'localizacao': 'Universidade X',
         'populacao': 'Estudantes',
@@ -87,7 +87,7 @@ def test_projeto_deserialization(professor):
     }
     obj = projeto_schema.load(payload)
     assert obj.titulo == payload['titulo']
-    assert obj.vagas == payload['vagas']
+    assert obj.vagas_totais == payload['vagas_totais']
 
 
 def test_aluno_projeto_deserialization(aluno, projeto):

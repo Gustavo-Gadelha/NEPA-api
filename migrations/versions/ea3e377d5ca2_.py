@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4302154b984c
+Revision ID: ea3e377d5ca2
 Revises: 
-Create Date: 2025-04-04 14:58:27.380607
+Create Date: 2025-05-18 23:32:48.875476
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4302154b984c'
+revision = 'ea3e377d5ca2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -71,7 +71,11 @@ def upgrade():
     sa.Column('admin_id', sa.UUID(), nullable=False),
     sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('atualizado_em', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('criado_por', sa.UUID(), nullable=True),
+    sa.Column('atualizado_por', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['admin_id'], ['admin.id'], ),
+    sa.ForeignKeyConstraint(['atualizado_por'], ['usuario.id'], ),
+    sa.ForeignKeyConstraint(['criado_por'], ['usuario.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('slug')
     )
@@ -90,7 +94,7 @@ def upgrade():
     sa.Column('titulacao', sa.String(length=255), nullable=False),
     sa.Column('linha_de_pesquisa', sa.String(length=255), nullable=False),
     sa.Column('vagas_ocupadas', sa.Integer(), nullable=False),
-    sa.Column('vagas', sa.Integer(), nullable=False),
+    sa.Column('vagas_totais', sa.Integer(), nullable=False),
     sa.Column('palavras_chave', sa.Text(), nullable=False),
     sa.Column('localizacao', sa.String(length=255), nullable=False),
     sa.Column('populacao', sa.String(length=255), nullable=False),
@@ -120,7 +124,13 @@ def upgrade():
     sa.Column('bolsista', sa.Boolean(), nullable=False),
     sa.Column('aluno_id', sa.UUID(), nullable=False),
     sa.Column('projeto_id', sa.UUID(), nullable=False),
+    sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('atualizado_em', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('criado_por', sa.UUID(), nullable=True),
+    sa.Column('atualizado_por', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['aluno_id'], ['aluno.id'], ),
+    sa.ForeignKeyConstraint(['atualizado_por'], ['usuario.id'], ),
+    sa.ForeignKeyConstraint(['criado_por'], ['usuario.id'], ),
     sa.ForeignKeyConstraint(['projeto_id'], ['projeto.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('aluno_id', 'projeto_id', name='uq_aluno_projeto')

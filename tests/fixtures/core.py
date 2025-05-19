@@ -20,14 +20,18 @@ def db(app):
     _db.drop_all()
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def db_session(db):
-    Session = scoped_session(sessionmaker(bind=db.engine))
+    Session = sessionmaker(bind=db.engine)
+    with db.engine.connect() as connection:
+        transaction = connection.begin()
+        session = Session(bind=connection)
 
-    try:
-        yield Session()
-    finally:
-        Session.remove()
+        try:
+            yield session
+        finally:
+            session.close()
+            transaction.rollback()
 
 
 @pytest.fixture

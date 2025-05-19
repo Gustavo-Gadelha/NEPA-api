@@ -39,6 +39,6 @@ def create_app(env: str = None) -> Flask:
     register_jwt_callbacks(jwt)
 
     from app import models
-    from app import schemas 
+    from app import schemas
 
     return app
