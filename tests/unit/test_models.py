@@ -43,7 +43,7 @@ def test_edital_criado(edital):
 def test_projeto_criado(projeto):
     assert projeto.id
     assert projeto.titulo == 'Projeto de Teste'
-    assert projeto.vagas == 20
+    assert projeto.vagas_totais == 20
     assert projeto.aceitou_termos is True
     assert projeto.professor.nome == 'Professor Teste'
     assert projeto.curso.nome == 'Curso de Teste'

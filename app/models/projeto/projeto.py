@@ -18,7 +18,7 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
     linha_de_pesquisa = db.Column(db.String(255), nullable=False)
 
     vagas_ocupadas = db.Column(db.Integer, nullable=False, default=0)
-    vagas = db.Column(db.Integer, nullable=False, default=0)
+    vagas_totais = db.Column(db.Integer, nullable=False, default=0)
 
     palavras_chave = db.Column(db.Text, nullable=False)
     localizacao = db.Column(db.String(255), nullable=False)
