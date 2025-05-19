@@ -3,7 +3,7 @@ from uuid import UUID
 
 from app import db
 from app.models import Projeto
-from app.models.enums import Situacao
+from app.models.enums import StatusProjeto
 from app.schemas import projeto_schema
 
 
@@ -36,16 +36,16 @@ def get_all_from(professor_id) -> list[Projeto]:
 
 
 def get_all_approved() -> list[Projeto]:
-    return db.session.scalars(db.select(Projeto).where(Projeto.situacao == Situacao.APROVADO)).all()
+    return db.session.scalars(db.select(Projeto).where(Projeto.situacao == StatusProjeto.APROVADO)).all()
 
 
 def get_all_pending() -> list[Projeto]:
-    return db.session.scalars(db.select(Projeto).where(Projeto.situacao == Situacao.PENDENTE)).all()
+    return db.session.scalars(db.select(Projeto).where(Projeto.situacao == StatusProjeto.PENDENTE)).all()
 
 
-def change_situation(projeto_id: UUID, situacao: Situacao) -> Projeto:
+def change_situation(projeto_id: UUID, status: StatusProjeto) -> Projeto:
     projeto: Projeto = get_or_404(projeto_id)
-    projeto.situacao = situacao
+    projeto.status = status
     db.session.commit()
 
     return projeto

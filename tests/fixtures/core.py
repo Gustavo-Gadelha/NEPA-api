@@ -1,5 +1,5 @@
 import pytest
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker
 
 from app import create_app, db as _db
 

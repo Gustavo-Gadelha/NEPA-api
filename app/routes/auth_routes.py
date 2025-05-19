@@ -28,7 +28,7 @@ def auth_login():
     return jsonify({'access_token': access_token, 'refresh_token': refresh_token}), 200
 
 
-@auth_bp.route('/cadastrar', methods=['POST'])
+@auth_bp.route('/cadastro', methods=['POST'])
 @auth_bp.response(200)
 def auth_register():
     dados = request.json

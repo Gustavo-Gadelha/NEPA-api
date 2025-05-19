@@ -1,4 +1,3 @@
-from flask import Flask
 from flask_smorest import Api
 
 from .aluno_routes import aluno_bp

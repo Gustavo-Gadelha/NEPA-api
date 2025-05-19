@@ -11,7 +11,7 @@ class Edital(db.Model, TimestampMixin, LogMixin):
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nome = db.Column(db.String(255), nullable=False)
     descricao = db.Column(db.Text, nullable=False)
-    arquivo = db.Column(db.String(255), nullable=False)
+    caminho_arquivo = db.Column(db.String(255), nullable=False)
     slug = db.Column(db.String(255), unique=True, nullable=False)
 
     admin_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('admin.id'), nullable=False)

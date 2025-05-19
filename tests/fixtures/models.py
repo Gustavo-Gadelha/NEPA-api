@@ -4,7 +4,7 @@ from datetime import date, time
 import pytest
 
 from app.models import *
-from app.models.enums import Situacao
+from app.models.enums import StatusProjeto, StatusInscricao
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def edital(admin, db_session):
         id=uuid.uuid4(),
         nome='Edital de Teste',
         descricao='Descrição do edital de teste.',
-        arquivo='edital_teste.pdf',
+        caminho_arquivo='edital_teste.pdf',
         admin=admin
     )
     db_session.add(edital)
@@ -86,7 +86,7 @@ def projeto(db_session, professor, curso):
         id=uuid.uuid4(),
         titulo='Projeto de Teste',
         sumario='Sumário do projeto',
-        situacao=Situacao.EM_ANDAMENTO,
+        status=StatusProjeto.EM_ANDAMENTO,
         titulacao='Doutor',
         linha_de_pesquisa='Tecnologia',
         vagas_totais=20,
@@ -109,12 +109,12 @@ def projeto(db_session, professor, curso):
 
 
 @pytest.fixture
-def aluno_projeto(db_session, aluno, projeto):
-    relacao = AlunoProjeto(
+def inscricao(db_session, aluno, projeto):
+    relacao = Inscricao(
         id=uuid.uuid4(),
         aluno=aluno,
         projeto=projeto,
-        aprovado=True,
+        status=StatusInscricao.PENDENTE,
         bolsista=False
     )
     db_session.add(relacao)

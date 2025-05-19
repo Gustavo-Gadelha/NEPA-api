@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: ea3e377d5ca2
+Revision ID: d5e552c1bd1b
 Revises: 
-Create Date: 2025-05-18 23:32:48.875476
+Create Date: 2025-05-19 09:46:59.826702
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ea3e377d5ca2'
+revision = 'd5e552c1bd1b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -66,7 +66,7 @@ def upgrade():
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('nome', sa.String(length=255), nullable=False),
     sa.Column('descricao', sa.Text(), nullable=False),
-    sa.Column('arquivo', sa.String(length=255), nullable=False),
+    sa.Column('caminho_arquivo', sa.String(length=255), nullable=False),
     sa.Column('slug', sa.String(length=255), nullable=False),
     sa.Column('admin_id', sa.UUID(), nullable=False),
     sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -90,7 +90,7 @@ def upgrade():
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('titulo', sa.String(length=255), nullable=False),
     sa.Column('sumario', sa.Text(), nullable=False),
-    sa.Column('situacao', sa.Enum('FINALIZADO', 'EM_ANDAMENTO', 'APROVADO', 'PENDENTE', 'REJEITADO', 'CANCELADO', name='situacao'), nullable=False),
+    sa.Column('status', sa.Enum('FINALIZADO', 'EM_ANDAMENTO', 'APROVADO', 'PENDENTE', 'REJEITADO', 'CANCELADO', name='statusprojeto'), nullable=False),
     sa.Column('titulacao', sa.String(length=255), nullable=False),
     sa.Column('linha_de_pesquisa', sa.String(length=255), nullable=False),
     sa.Column('vagas_ocupadas', sa.Integer(), nullable=False),
@@ -117,23 +117,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['curso_id'], ['curso.id'], ),
     sa.ForeignKeyConstraint(['professor_id'], ['professor.id'], ),
     sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('aluno_projeto',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('aprovado', sa.Boolean(), nullable=False),
-    sa.Column('bolsista', sa.Boolean(), nullable=False),
-    sa.Column('aluno_id', sa.UUID(), nullable=False),
-    sa.Column('projeto_id', sa.UUID(), nullable=False),
-    sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('atualizado_em', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('criado_por', sa.UUID(), nullable=True),
-    sa.Column('atualizado_por', sa.UUID(), nullable=True),
-    sa.ForeignKeyConstraint(['aluno_id'], ['aluno.id'], ),
-    sa.ForeignKeyConstraint(['atualizado_por'], ['usuario.id'], ),
-    sa.ForeignKeyConstraint(['criado_por'], ['usuario.id'], ),
-    sa.ForeignKeyConstraint(['projeto_id'], ['projeto.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('aluno_id', 'projeto_id', name='uq_aluno_projeto')
     )
     op.create_table('atividade',
     sa.Column('id', sa.UUID(), nullable=False),
@@ -168,6 +151,23 @@ def upgrade():
     sa.ForeignKeyConstraint(['criado_por'], ['usuario.id'], ),
     sa.ForeignKeyConstraint(['projeto_id'], ['projeto.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('inscricao',
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.Column('status', sa.Enum('APROVADO', 'PENDENTE', 'REJEITADO', name='statusinscricao'), nullable=False),
+    sa.Column('bolsista', sa.Boolean(), nullable=False),
+    sa.Column('aluno_id', sa.UUID(), nullable=False),
+    sa.Column('projeto_id', sa.UUID(), nullable=False),
+    sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('atualizado_em', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('criado_por', sa.UUID(), nullable=True),
+    sa.Column('atualizado_por', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['aluno_id'], ['aluno.id'], ),
+    sa.ForeignKeyConstraint(['atualizado_por'], ['usuario.id'], ),
+    sa.ForeignKeyConstraint(['criado_por'], ['usuario.id'], ),
+    sa.ForeignKeyConstraint(['projeto_id'], ['projeto.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('aluno_id', 'projeto_id', name='uq_inscricao')
     )
     op.create_table('relatorio_bolsista',
     sa.Column('id', sa.UUID(), nullable=False),
@@ -214,7 +214,7 @@ def upgrade():
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('titulo', sa.String(length=255), nullable=False),
     sa.Column('descricao', sa.Text(), nullable=True),
-    sa.Column('arquivo', sa.String(length=255), nullable=False),
+    sa.Column('caminho_arquivo', sa.Text(), nullable=False),
     sa.Column('relatorio_projeto_id', sa.UUID(), nullable=True),
     sa.Column('relatorio_bolsista_id', sa.UUID(), nullable=True),
     sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
@@ -246,10 +246,10 @@ def upgrade():
     )
     op.create_table('presenca',
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('aluno_id', sa.UUID(), nullable=False),
-    sa.Column('frequencia_semanal_id', sa.UUID(), nullable=False),
     sa.Column('presente', sa.Boolean(), nullable=False),
     sa.Column('justificativa', sa.Text(), nullable=True),
+    sa.Column('aluno_id', sa.UUID(), nullable=False),
+    sa.Column('frequencia_semanal_id', sa.UUID(), nullable=False),
     sa.Column('criado_em', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('atualizado_em', sa.DateTime(timezone=True), nullable=True),
     sa.Column('criado_por', sa.UUID(), nullable=True),
@@ -271,9 +271,9 @@ def downgrade():
     op.drop_table('anexo')
     op.drop_table('relatorio_coordenador')
     op.drop_table('relatorio_bolsista')
+    op.drop_table('inscricao')
     op.drop_table('controle_mensal')
     op.drop_table('atividade')
-    op.drop_table('aluno_projeto')
     op.drop_table('projeto')
     op.drop_table('professor')
     op.drop_table('edital')

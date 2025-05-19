@@ -9,7 +9,7 @@ class Aluno(Usuario):
     curso_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('curso.id'), nullable=False)
     curso = db.relationship('Curso', foreign_keys='Aluno.curso_id')
 
-    projetos = db.relationship('AlunoProjeto', back_populates='aluno')
+    projetos = db.relationship('Inscricao', back_populates='aluno')
     atividades = db.relationship('Atividade', back_populates='aluno')
     presencas = db.relationship('Presenca', back_populates='aluno')
 

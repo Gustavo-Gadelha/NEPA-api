@@ -14,7 +14,7 @@ from app.schemas import edital_schema
 
 def save(dados: dict[str, Any], file: FileStorage, admin_id: UUID) -> Edital:
     edital: Edital = edital_schema.load(dados, partial=True)
-    edital.arquivo = _save_file(file)
+    edital.caminho_arquivo = _save_file(file)
     edital.admin_id = admin_id
 
     db.session.add(edital)
@@ -40,7 +40,7 @@ def get_all() -> list[Edital]:
 
 def delete(_id: UUID) -> None:
     edital: Edital = get_or_404(_id)
-    caminho_arquivo: Path = UPLOADS_DIR / edital.arquivo
+    caminho_arquivo: Path = UPLOADS_DIR / edital.caminho_arquivo
     caminho_arquivo.unlink(missing_ok=True)  # TODO: Deve jogar algum aviso caso ele não encontre o arquivo
 
     db.session.delete(edital)
@@ -53,12 +53,12 @@ def get_by_slug_or_404(slug: str) -> Edital:
 
 def abs_path_to(_id: UUID) -> Path:
     edital: Edital = get_or_404(_id)
-    return UPLOADS_DIR / edital.arquivo
+    return UPLOADS_DIR / edital.caminho_arquivo
 
 
 def abs_path_to_by_slug(slug: str) -> Path:
     edital: Edital = get_by_slug_or_404(slug)
-    return UPLOADS_DIR / edital.arquivo
+    return UPLOADS_DIR / edital.caminho_arquivo
 
 
 def extension_is_allowed(filename: str):

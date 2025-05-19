@@ -4,7 +4,7 @@ from datetime import timezone, datetime, timedelta
 from sqlalchemy import func
 
 from app import db
-from app.models.enums import Situacao
+from app.models.enums import StatusInscricao, StatusProjeto
 from app.models.mixins import TimestampMixin, LogMixin
 
 
@@ -12,7 +12,7 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     titulo = db.Column(db.String(255), nullable=False)
     sumario = db.Column(db.Text, nullable=False)
-    situacao = db.Column(db.Enum(Situacao), nullable=False)
+    status = db.Column(db.Enum(StatusProjeto), nullable=False)
 
     titulacao = db.Column(db.String(255), nullable=False)
     linha_de_pesquisa = db.Column(db.String(255), nullable=False)
@@ -33,7 +33,7 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
 
     aceitou_termos = db.Column(db.Boolean, nullable=False, default=False)
 
-    alunos = db.relationship('AlunoProjeto', back_populates='projeto', cascade='all, delete-orphan')
+    inscricoes = db.relationship('Inscricao', back_populates='projeto', cascade='all, delete-orphan')
     atividades = db.relationship('Atividade', back_populates='projeto', cascade='all, delete-orphan')
 
     professor_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('professor.id'), nullable=False)

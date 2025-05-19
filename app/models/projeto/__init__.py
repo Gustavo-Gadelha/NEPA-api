@@ -1,5 +1,9 @@
-from .aluno_projeto import AlunoProjeto
 from .atividade import Atividade
+from .inscricao import Inscricao
 from .projeto import Projeto
 
-__all__ = ['AlunoProjeto', 'Atividade', 'Projeto']
+__all__ = [
+    'Inscricao',
+    'Atividade',
+    'Projeto'
+]

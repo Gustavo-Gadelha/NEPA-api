@@ -7,7 +7,13 @@ class Autoridade(Enum):
     PROFESSOR = 'Professor'
 
 
-class Situacao(Enum):
+class StatusInscricao(Enum):
+    APROVADO = 'Aprovado'
+    PENDENTE = 'Pendente'
+    REJEITADO = 'Rejeitado'
+
+
+class StatusProjeto(Enum):
     FINALIZADO = 'Finalizado'
     EM_ANDAMENTO = 'Em Andamento'
     APROVADO = 'Aprovado'

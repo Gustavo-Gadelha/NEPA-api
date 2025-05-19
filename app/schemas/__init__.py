@@ -3,7 +3,7 @@ from marshmallow import Schema
 from .curso_schema import CursoSchema
 from .edital_schema import EditalSchema
 from .frequencias import ControleMensalSchema, FrequenciaSemanalSchema, PresencaSchema
-from .projeto import AlunoProjetoSchema, AtividadeSchema, ProjetoSchema
+from .projeto import InscricaoSchema, AtividadeSchema, ProjetoSchema
 from .relatorios import AnexoSchema, RelatorioBolsistaSchema, RelatorioCoordenadorSchema
 from .usuarios import AdminSchema, AlunoSchema, ProfessorSchema, UsuarioSchema
 
@@ -14,7 +14,7 @@ controle_mensal_schema: Schema = ControleMensalSchema()
 frequencia_semanal_schema: Schema = FrequenciaSemanalSchema()
 presenca_schema: Schema = PresencaSchema()
 
-aluno_projeto_schema: Schema = AlunoProjetoSchema()
+inscricao_schema: Schema = InscricaoSchema()
 atividade_schema: Schema = AtividadeSchema()
 projeto_schema: Schema = ProjetoSchema()
 

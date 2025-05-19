@@ -1,3 +1,6 @@
+from app.models.enums import StatusInscricao
+
+
 def test_admin_criado(admin):
     assert admin.id
     assert admin.nome == 'Admin Teste'
@@ -35,7 +38,7 @@ def test_edital_criado(edital):
     assert edital.id
     assert edital.nome == 'Edital de Teste'
     assert edital.descricao == 'Descrição do edital de teste.'
-    assert edital.arquivo == 'edital_teste.pdf'
+    assert edital.caminho_arquivo == 'edital_teste.pdf'
     assert edital.slug.startswith('edital-de-teste')
     assert edital.admin.nome == 'Admin Teste'
 
@@ -49,12 +52,12 @@ def test_projeto_criado(projeto):
     assert projeto.curso.nome == 'Curso de Teste'
 
 
-def test_aluno_projeto_criado(aluno_projeto):
-    assert aluno_projeto.id
-    assert aluno_projeto.aprovado is True
-    assert aluno_projeto.bolsista is False
-    assert aluno_projeto.aluno.nome == 'Aluno Teste'
-    assert aluno_projeto.projeto.titulo == 'Projeto de Teste'
+def test_inscricao_criado(inscricao):
+    assert inscricao.id
+    assert inscricao.status == StatusInscricao.PENDENTE
+    assert inscricao.bolsista is False
+    assert inscricao.aluno.nome == 'Aluno Teste'
+    assert inscricao.projeto.titulo == 'Projeto de Teste'
 
 
 def test_atividade_criada(atividade):

@@ -14,7 +14,7 @@ def test_admin_serialization(edital, admin):
     assert data['email'] == admin.email
 
 
-def test_aluno_serialization(projeto, aluno_projeto, aluno):
+def test_aluno_serialization(projeto, inscricao, aluno):
     data = aluno_schema.dump(aluno)
     assert data['nome'] == aluno.nome
     assert data['email'] == aluno.email
@@ -36,13 +36,13 @@ def test_projeto_serialization(projeto):
     data = projeto_schema.dump(projeto)
     assert data['titulo'] == projeto.titulo
     assert data['sumario'] == projeto.sumario
-    assert data['situacao'] == projeto.situacao.value
+    assert data['status'] == projeto.status.value
 
 
-def test_aluno_projeto_serialization(aluno_projeto):
-    data = aluno_projeto_schema.dump(aluno_projeto)
-    assert data['aprovado'] == aluno_projeto.aprovado
-    assert data['bolsista'] == aluno_projeto.bolsista
+def test_inscricao_serialization(inscricao):
+    data = inscricao_schema.dump(inscricao)
+    assert data['status'] == inscricao.status.value
+    assert data['bolsista'] == inscricao.bolsista
 
 
 def test_atividade_serialization(atividade):
