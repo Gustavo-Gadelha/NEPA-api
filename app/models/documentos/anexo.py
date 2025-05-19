@@ -1,6 +1,6 @@
 import uuid
 
-from app import db
+from app.extensions import db
 from app.models.mixins import TimestampMixin, LogMixin
 
 
@@ -13,5 +13,5 @@ class Anexo(db.Model, TimestampMixin, LogMixin):
     relatorio_projeto_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('relatorio_coordenador.id'))
     relatorio_bolsista_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('relatorio_bolsista.id'))
 
-    def __init__(self, **kwargs):
+def __init__(self, **kwargs):
         super().__init__(**kwargs)

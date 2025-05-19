@@ -1,6 +1,8 @@
-from .curso import Curso
-from .edital import Edital
+from . import enums
+from . import mixins
+
+from .common import Curso
+from .documentos import Anexo, Edital, RelatorioBolsista, RelatorioCoordenador
 from .frequencias import ControleMensal, FrequenciaSemanal, Presenca
-from .projeto import Inscricao, Atividade, Projeto
-from .relatorios import Anexo, RelatorioBolsista, RelatorioCoordenador
+from .projeto import Atividade, Inscricao, Projeto
 from .usuarios import Admin, Aluno, Professor, Usuario

@@ -3,7 +3,7 @@ import uuid
 from slugify import slugify
 from sqlalchemy import func
 
-from app import db
+from app.extensions import db
 from app.models.mixins import TimestampMixin, LogMixin
 
 

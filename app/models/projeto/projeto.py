@@ -3,8 +3,8 @@ from datetime import timezone, datetime, timedelta
 
 from sqlalchemy import func
 
-from app import db
-from app.models.enums import StatusInscricao, StatusProjeto
+from app.extensions import db
+from app.models.enums import StatusProjeto
 from app.models.mixins import TimestampMixin, LogMixin
 
 

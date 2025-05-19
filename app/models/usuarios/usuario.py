@@ -1,6 +1,6 @@
 import uuid
 
-from app import db
+from app.extensions import db
 from app.models.enums import Autoridade
 from app.models.mixins import TimestampMixin
 

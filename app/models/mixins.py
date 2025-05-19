@@ -2,7 +2,7 @@ from flask_jwt_extended import current_user
 from sqlalchemy import func
 from sqlalchemy.orm import declarative_mixin, declared_attr
 
-from app import db
+from app.extensions import db
 
 
 @declarative_mixin
