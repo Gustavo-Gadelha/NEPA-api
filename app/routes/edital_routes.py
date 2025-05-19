@@ -33,7 +33,7 @@ def criar_edital():
 
     if not arquivo or arquivo.filename == '':
         return jsonify({'message': 'Nenhum arquivo enviado ou selecionado'}), 400
-    if edital_service.extension_is_allowed(arquivo.filename):
+    if not edital_service.extension_is_allowed(arquivo.filename):
         return jsonify({'message': 'Extensão de arquivo não permitida'}), 400
 
     dados = request.json
