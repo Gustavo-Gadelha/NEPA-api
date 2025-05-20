@@ -1,4 +1,4 @@
-from marshmallow import post_load, ValidationError, validate, validates
+from marshmallow import post_load, ValidationError, validates
 
 from app.config import MIN_PASSWORD_LENGTH
 from app.extensions import ma, argon2
@@ -16,7 +16,6 @@ class UsuarioInSchema(ma.SQLAlchemySchema):
     email = ma.auto_field(required=True)
     senha = ma.auto_field(required=True)
     telefone = ma.auto_field(required=True)
-    tipo = ma.auto_field(required=True, validate=validate.OneOf(Autoridade))
 
     @validates('senha')
     def validate_senha(self, senha, **kwargs):
@@ -29,7 +28,7 @@ class UsuarioInSchema(ma.SQLAlchemySchema):
 
     @post_load
     def hash_senha(self, schema, **kwargs):
-        schema['senha'] = argon2.generate_password_hash(schema['senha']) #TODO: deve usar o serviço de usuário
+        schema['senha'] = argon2.generate_password_hash(schema['senha'])  # TODO: deve usar o serviço de usuário
         return schema
 
 

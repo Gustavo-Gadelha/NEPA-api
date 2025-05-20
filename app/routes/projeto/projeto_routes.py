@@ -1,14 +1,14 @@
-from flask import request, jsonify
+from flask import jsonify
 from flask_jwt_extended import current_user, jwt_required
 from flask_smorest import Blueprint
-from werkzeug.exceptions import BadRequest, Forbidden
+from werkzeug.exceptions import Forbidden
 
-from app import db
 from app.decorators import requires_any
+from app.extensions import db
 from app.models import Projeto, Inscricao
 from app.models.enums import Autoridade, StatusProjeto
-from app.schemas import projeto_schema, inscricao_schema, ProjetoSchema, InscricaoSchema
-from app.services.projeto import projeto_service, inscricao_service
+from app.schemas import ProjetoInSchema, ProjetoOutSchema, InscricaoOutSchema, ProjetoStatusSchema
+from app.services import projeto_service, inscricao_service
 
 projeto_bp = Blueprint('projeto', __name__, description='Rotas que modificam professores')
 
@@ -23,88 +23,76 @@ def checar_usuario():
 
 
 @projeto_bp.route('/', methods=['POST'])
-@projeto_bp.arguments(ProjetoSchema)
-@projeto_bp.response(201, ProjetoSchema)
 @requires_any(Autoridade.PROFESSOR)
-def criar_projeto():
-    dados = request.json
-    projeto = projeto_service.save(dados, current_user.id, current_user.curso.id)
-
-    return jsonify(projeto_schema.dump(projeto)), 201
+@projeto_bp.arguments(ProjetoInSchema)
+@projeto_bp.response(201, ProjetoOutSchema)
+def criar_projeto(projeto):
+    return projeto_service.save(projeto)
 
 
 @projeto_bp.route('/', methods=['GET'])
-@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN, Autoridade.ALUNO)
+@projeto_bp.response(200, ProjetoOutSchema(many=True))
 def listar_projetos():
-    projetos: list[Projeto] = projeto_service.get_all()
-    return jsonify(projeto_schema.dump(projetos, many=True)), 200
+    return projeto_service.get_all()
 
 
 @projeto_bp.route('/me', methods=['GET'])
-@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.PROFESSOR)
+@projeto_bp.response(200, ProjetoOutSchema(many=True))
 def listar_projetos_do_usuario():
-    projetos: list[Projeto] = projeto_service.get_all_from(current_user.id)
-    return jsonify(projeto_schema.dump(projetos, many=True)), 200
+    return projeto_service.get_all(Projeto.professor_id == current_user.id)
 
 
 @projeto_bp.route('/<uuid:projeto_id>', methods=['GET'])
-@projeto_bp.response(200, ProjetoSchema)
 @requires_any(Autoridade.ADMIN, Autoridade.ALUNO)
+@projeto_bp.response(200, ProjetoOutSchema)
 def exibir_projeto_id(projeto_id):
-    projeto: Projeto = projeto_service.get_or_404(projeto_id)
-    return jsonify(projeto_schema.dump(projeto)), 200
+    return projeto_service.get_or_404(projeto_id)
 
 
 @projeto_bp.route('/<uuid:projeto_id>', methods=['DELETE'])
-@projeto_bp.response(200)
 @requires_any(Autoridade.ADMIN)
+@projeto_bp.response(200)
 def deletar_projeto(projeto_id):
     projeto_service.delete(projeto_id)
     return jsonify({'message': 'Projeto deletado com sucesso'}), 200
 
 
-@projeto_bp.route('/<uuid:projeto_id>/situacao', methods=['PATCH'])
-@projeto_bp.response(200, ProjetoSchema)
-def mudar_situacao_projeto(projeto_id):
-    dados = request.json
-    situacao = dados.get('situacao')
-
-    if situacao not in StatusProjeto:
-        raise BadRequest('Valor inválido para situação')
-
-    projeto: Projeto = projeto_service.change_situation(projeto_id, StatusProjeto[situacao])
-    return jsonify(projeto_schema.dump(projeto)), 200
+@projeto_bp.route('/<uuid:projeto_id>/status', methods=['PATCH'])
+@requires_any(Autoridade.ADMIN)
+@projeto_bp.arguments(ProjetoStatusSchema)
+@projeto_bp.response(200, ProjetoOutSchema)
+def alterar_status_projeto(args, projeto_id):
+    status = args.get('status')
+    return projeto_service.change_situation(projeto_id, status)
 
 
 @projeto_bp.route('/aprovados', methods=['GET'])
-@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN)
+@projeto_bp.response(200, ProjetoOutSchema(many=True))
 def listar_projetos_aprovados():
-    projetos: list[Projeto] = projeto_service.get_all_approved()
-    return jsonify(projeto_schema.dump(projetos, many=True)), 200
+    return projeto_service.get_all(Projeto.status == StatusProjeto.APROVADO)
 
 
 @projeto_bp.route('/pendentes', methods=['GET'])
-@projeto_bp.response(200, ProjetoSchema(many=True))
 @requires_any(Autoridade.ADMIN)
+@projeto_bp.response(200, ProjetoOutSchema(many=True))
 def listar_projetos_pendentes():
-    projetos: list[Projeto] = projeto_service.get_all_pending()
-    return jsonify(projeto_schema.dump(projetos, many=True)), 200
+    return projeto_service.get_all(Projeto.status == StatusProjeto.PENDENTE)
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos', methods=['GET'])
-@projeto_bp.response(200, InscricaoSchema(many=True))
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
+@projeto_bp.response(200, InscricaoOutSchema(many=True))
 def listar_alunos_por_projeto(projeto_id):
     projeto: Projeto = projeto_service.get_or_404(projeto_id)
-    return jsonify(inscricao_schema.dump(projeto.alunos, many=True)), 200
+    return projeto.alunos
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos/<uuid:aluno_id>', methods=['POST'])
-@projeto_bp.response(200, InscricaoSchema)
 @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
+@projeto_bp.response(201, InscricaoOutSchema)
 def cadastrar_aluno(projeto_id, aluno_id):
     projeto: Projeto = projeto_service.get_or_404(projeto_id)
 
@@ -125,21 +113,18 @@ def cadastrar_aluno(projeto_id, aluno_id):
     if projeto.vagas_ocupadas >= projeto.vagas_totais:
         return jsonify({'message': 'Todas as vagas ofertadas para este projeto, já foram preenchidas'}), 409
 
-    inscricao = inscricao_service.save(aluno_id, projeto_id)
-    return jsonify(inscricao_schema.dump(inscricao)), 201
+    return inscricao_service.save(aluno_id, projeto_id)
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos/<uuid:aluno_id>/aprovar', methods=['POST'])
-@projeto_bp.response(200, InscricaoSchema)
 @requires_any(Autoridade.PROFESSOR)
+@projeto_bp.response(200, InscricaoOutSchema)
 def aprovar_aluno_no_projeto(projeto_id, aluno_id):
-    inscricao = inscricao_service.approve(aluno_id, projeto_id)
-    return jsonify(inscricao_schema.dump(inscricao)), 200
+    return inscricao_service.aprovar(aluno_id, projeto_id)
 
 
 @projeto_bp.route('/<uuid:projeto_id>/alunos/<uuid:aluno_id>/rejeitar', methods=['POST'])
-@projeto_bp.response(200, InscricaoSchema)
 @requires_any(Autoridade.PROFESSOR)
-def alterar_inscricao(projeto_id, aluno_id):
-    inscricao = inscricao_service.reject(aluno_id, projeto_id)
-    return jsonify(inscricao_schema.dump(inscricao)), 200
+@projeto_bp.response(200, InscricaoOutSchema)
+def alterar_aluno_projeto(projeto_id, aluno_id):
+    return inscricao_service.rejeitar(aluno_id, projeto_id)

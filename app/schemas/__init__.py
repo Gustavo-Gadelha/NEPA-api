@@ -1,9 +1,13 @@
+from .base import (
+    LoginInSchema, TokensOutSchema, RedefinirSenhaInSchema,
+)
+
 from .common import (
     CursoInSchema, CursoOutSchema
 )
 
 from .documentos import (
-    EditalInSchema, EditalOutSchema,
+    EditalInSchema, EditalOutSchema, EditalFileInSchema,
     RelatorioBolsistaInSchema, RelatorioBolsistaOutSchema,
     RelatorioCoordenadorInSchema, RelatorioCoordenadorOutSchema
 )
@@ -16,7 +20,7 @@ from .frequencias import (
 from .projeto import (
     AtividadeInSchema, AtividadeOutSchema,
     InscricaoInSchema, InscricaoOutSchema,
-    ProjetoInSchema, ProjetoOutSchema
+    ProjetoInSchema, ProjetoOutSchema, ProjetoStatusSchema
 )
 
 from .usuarios import (

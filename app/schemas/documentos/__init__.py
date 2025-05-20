@@ -1,3 +1,3 @@
-from .edital_schemas import EditalInSchema, EditalOutSchema
+from .edital_schemas import EditalInSchema, EditalOutSchema, EditalFileInSchema
 from .relatorio_bolsista_schemas import RelatorioBolsistaInSchema, RelatorioBolsistaOutSchema
 from .relatorio_coordenador_schemas import RelatorioCoordenadorInSchema, RelatorioCoordenadorOutSchema

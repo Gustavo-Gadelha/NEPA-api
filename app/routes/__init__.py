@@ -1,17 +1,35 @@
 from flask_smorest import Api
 
-from .aluno_routes import aluno_bp
-from .auth_routes import auth_bp
-from .edital_routes import edital_bp
-from .professor_routes import professor_bp
-from .projeto_routes import projeto_bp
+from .common import (
+    curso_bp
+)
+
+from .documentos import (
+    edital_bp
+)
+
+from .projeto import (
+    projeto_bp
+)
+
+from .public import (
+    auth_bp
+)
+
+from .usuarios import (
+    aluno_bp,
+    professor_bp,
+    usuario_bp
+)
 
 blueprints = {
-    aluno_bp: '/alunos',
-    auth_bp: '/auth',
+    curso_bp: '/cursos',
     edital_bp: '/editais',
-    professor_bp: '/professores',
     projeto_bp: '/projetos',
+    auth_bp: '/auth',
+    aluno_bp: '/alunos',
+    professor_bp: '/professores',
+    usuario_bp: '/usuarios',
 }
 
 

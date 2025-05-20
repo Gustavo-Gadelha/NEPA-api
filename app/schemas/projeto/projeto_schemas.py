@@ -35,6 +35,10 @@ class ProjetoInSchema(ma.SQLAlchemySchema):
     curso_id = ma.auto_field(required=True)
 
 
+class ProjetoStatusSchema(ma.Schema):
+    status = ma.Enum(StatusProjeto, by_value=False)
+
+
 class ProjetoOutSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Projeto
@@ -68,4 +72,3 @@ class ProjetoOutSchema(ma.SQLAlchemySchema):
 
     professor_id = ma.auto_field()
     curso_id = ma.auto_field()
-
