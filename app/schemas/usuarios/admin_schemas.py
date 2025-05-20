@@ -5,6 +5,7 @@ from app.models import Admin
 class AdminInSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Admin
+        load_instance = True
 
     nome = ma.auto_field(required=True)
     matricula = ma.auto_field(required=True)
@@ -16,6 +17,8 @@ class AdminInSchema(ma.SQLAlchemySchema):
 class AdminOutSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Admin
+        load_instance = True
+        include_fk = True
 
     id = ma.auto_field()
     nome = ma.auto_field()

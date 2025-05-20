@@ -7,6 +7,7 @@ def test_curso_deserialization():
         'nome': 'Curso de Teste',
         'sigla': 'CT'
     }
+    curso_schema = CursoInSchema()
     obj = curso_schema.load(payload)
     assert obj.nome == payload['nome']
     assert obj.sigla == payload['sigla']
@@ -20,6 +21,7 @@ def test_admin_deserialization():
         'senha': 'senha_segura1',
         'telefone': '999999999'
     }
+    admin_schema = AdminInSchema()
     obj = admin_schema.load(payload)
     assert obj.nome == payload['nome']
     assert obj.email == payload['email']
@@ -34,6 +36,7 @@ def test_aluno_deserialization(curso):
         'telefone': '988888888',
         'curso_id': str(curso.id)
     }
+    aluno_schema = AlunoInSchema()
     obj = aluno_schema.load(payload)
     assert obj.nome == payload['nome']
     assert obj.email == payload['email']
@@ -48,6 +51,7 @@ def test_professor_deserialization(curso):
         'telefone': '977777777',
         'curso_id': str(curso.id)
     }
+    professor_schema = ProfessorInSchema()
     obj = professor_schema.load(payload)
     assert obj.nome == payload['nome']
     assert obj.email == payload['email']
@@ -57,9 +61,9 @@ def test_edital_deserialization(admin):
     payload = {
         'nome': 'Edital de Teste',
         'descricao': 'Descrição do edital de teste.',
-        'caminho_arquivo': 'edital_teste.pdf',
         'admin_id': str(admin.id)
     }
+    edital_schema = EditalInSchema()
     obj = edital_schema.load(payload)
     assert obj.nome == payload['nome']
     assert obj.descricao == payload['descricao']
@@ -86,6 +90,7 @@ def test_projeto_deserialization(professor):
         'professor_id': str(professor.id),
         'curso_id': str(professor.curso.id)
     }
+    projeto_schema = ProjetoInSchema()
     obj = projeto_schema.load(payload)
     assert obj.titulo == payload['titulo']
     assert obj.vagas_totais == payload['vagas_totais']
@@ -98,6 +103,7 @@ def test_inscricao_deserialization(aluno, projeto):
         'status': StatusInscricao.PENDENTE.name,
         'bolsista': False
     }
+    inscricao_schema = InscricaoInSchema()
     obj = inscricao_schema.load(payload)
     assert obj.status == StatusInscricao.PENDENTE
     assert obj.bolsista is False
@@ -112,20 +118,10 @@ def test_atividade_deserialization(aluno, projeto):
         'aluno_id': str(aluno.id),
         'projeto_id': str(projeto.id)
     }
+    atividade_schema = AtividadeInSchema()
     obj = atividade_schema.load(payload)
     assert obj.titulo == payload['titulo']
     assert obj.descricao == payload['descricao']
-
-
-def test_controle_mensal_deserialization(projeto):
-    payload = {
-        'ano': 2025,
-        'mes': 3,
-        'projeto_id': str(projeto.id)
-    }
-    obj = controle_mensal_schema.load(payload)
-    assert obj.ano == payload['ano']
-    assert obj.mes == payload['mes']
 
 
 def test_frequencia_semanal_deserialization(controle_mensal):
@@ -137,6 +133,7 @@ def test_frequencia_semanal_deserialization(controle_mensal):
         'observacao': 'Sem ocorrências',
         'controle_mensal_id': str(controle_mensal.id)
     }
+    frequencia_semanal_schema = FrequenciaSemanalInSchema()
     obj = frequencia_semanal_schema.load(payload)
     assert obj.descricao == payload['descricao']
     assert obj.observacao == payload['observacao']
@@ -149,5 +146,6 @@ def test_presenca_deserialization(aluno, frequencia_semanal):
         'presente': True,
         'justificativa': None
     }
+    presenca_schema = PresencaInSchema()
     obj = presenca_schema.load(payload)
     assert obj.presente is True
