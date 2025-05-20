@@ -3,7 +3,7 @@ from flask_jwt_extended import current_user, jwt_required
 from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
-from app.decorators import requires_any
+from app.jwt import requires_any
 from app.extensions import db
 from app.models import Projeto, Inscricao
 from app.models.enums import Autoridade, StatusProjeto

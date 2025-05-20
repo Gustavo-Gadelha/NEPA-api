@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, current_user
 from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
-from app.decorators import requires_any
+from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.schemas import UsuarioOutSchema, UsuarioInSchema
 from app.services import usuario_service

@@ -8,6 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 migrate = Migrate()
 ma = Marshmallow()
-jwt = JWTManager()
+jwt_manager = JWTManager()
 argon2 = Argon2()
 api = Api()

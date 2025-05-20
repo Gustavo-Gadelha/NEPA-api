@@ -17,10 +17,10 @@ def create_app(env: str = None) -> Flask:
         case _:
             raise RuntimeError(f"Ambiente de execução '{env}' não reconhecido")
 
-    from app.extensions import db, migrate, jwt, argon2, api
+    from app.extensions import db, migrate, jwt_manager, argon2, api
     db.init_app(app)
     migrate.init_app(app, db)
-    jwt.init_app(app)
+    jwt_manager.init_app(app)
     argon2.init_app(app)
     api.init_app(app)
 
@@ -33,13 +33,13 @@ def create_app(env: str = None) -> Flask:
     from app import schemas
     from app import services
 
-    from app.routes import register_blueprints
-    register_blueprints(api)
-
     from app.handlers import register_error_handlers
     register_error_handlers(app)
 
-    from app.jwt_callbacks import register_jwt_callbacks
-    register_jwt_callbacks(jwt)
+    from app.jwt import register_jwt_callbacks
+    register_jwt_callbacks(jwt_manager)
+
+    from app.routes import register_blueprints
+    register_blueprints(api)
 
     return app

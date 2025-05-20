@@ -1,4 +1,5 @@
 from flask import jsonify, Flask
+from flask_jwt_extended.exceptions import JWTDecodeError
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from werkzeug.exceptions import NotFound, Unauthorized, Forbidden
@@ -34,6 +35,10 @@ def register_error_handlers(app: Flask) -> None:
     @app.errorhandler(ValidationError)
     def handle_validation_error(error: ValidationError):
         return jsonify({'message': 'Erro de validação', 'errors': error.messages}), 422
+
+    @app.errorhandler(JWTDecodeError)
+    def handle_jwt_decode_error(error: JWTDecodeError):
+        return jsonify({'message': 'Erro durante a decodificação do token JWT', 'error': str(error)}), 422
 
     @app.errorhandler(Exception)
     def handle_generic_error(error: Exception):

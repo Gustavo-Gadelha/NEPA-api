@@ -5,7 +5,7 @@ from flask_jwt_extended import current_user, jwt_required
 from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
-from app.decorators import requires_any
+from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.schemas import EditalInSchema, EditalOutSchema, EditalFileInSchema
 from app.services import edital_service
