@@ -27,16 +27,14 @@ MIN_PASSWORD_LENGTH: int = 8
 
 
 class _Config(object):
-    API_TITLE: str = os.getenv('API_TITLE')
-    API_VERSION: str = os.getenv('API_VERSION')
-    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
-    OPENAPI_URL_PREFIX: str = os.getenv('OPENAPI_URL_PREFIX')
-    OPENAPI_SWAGGER_UI_PATH: str = os.getenv('OPENAPI_SWAGGER_UI_PATH')
-    OPENAPI_SWAGGER_UI_URL: str = os.getenv('OPENAPI_SWAGGER_UI_URL')
     SECRET_KEY: str = os.getenv('SECRET_KEY')
     JWT_SECRET: str = os.getenv('JWT_SECRET')
     MAX_CONTENT_LENGTH: int = int(os.getenv('MAX_CONTENT_LENGHT', MAX_FILE_SIZE))
     CORS_SUPPORTS_CREDENTIALS: bool = True
+
+    API_TITLE: str = os.getenv('API_TITLE')
+    API_VERSION: str = os.getenv('API_VERSION')
+    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
 
 
 class ProductionConfig(_Config):
@@ -44,9 +42,13 @@ class ProductionConfig(_Config):
     SQLALCHEMY_DATABASE_URI: str = os.getenv('PRODUCTION_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     CORS_ORIGINS: list[str] = os.getenv('CORS_ORIGINS', '').split(',')
-
     if not CORS_ORIGINS:
         raise ValueError('Variável CORS_ORIGINS não encontrada ou vazia')
+
+    OPENAPI_URL_PREFIX: str = None
+    OPENAPI_SWAGGER_UI_PATH: str = None
+    OPENAPI_SWAGGER_UI_URL: str = None
+    PROPAGATE_EXCEPTIONS: bool = False
 
 
 class DevelopmentConfig(_Config):
@@ -54,6 +56,11 @@ class DevelopmentConfig(_Config):
     SQLALCHEMY_DATABASE_URI: str = os.getenv('DEVELOPMENT_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = True
     CORS_ORIGINS: list[str] = ['*']
+
+    OPENAPI_URL_PREFIX: str = os.getenv('OPENAPI_URL_PREFIX')
+    OPENAPI_SWAGGER_UI_PATH: str = os.getenv('OPENAPI_SWAGGER_UI_PATH')
+    OPENAPI_SWAGGER_UI_URL: str = os.getenv('OPENAPI_SWAGGER_UI_URL')
+    PROPAGATE_EXCEPTIONS: bool = True
 
 
 class TestingConfig(_Config):
