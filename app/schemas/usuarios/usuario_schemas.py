@@ -1,5 +1,4 @@
-from marshmallow import post_load, ValidationError
-from sqlalchemy.orm import validates
+from marshmallow import post_load, ValidationError, validate, validates
 
 from app.config import MIN_PASSWORD_LENGTH
 from app.extensions import ma, argon2
@@ -17,6 +16,7 @@ class UsuarioInSchema(ma.SQLAlchemySchema):
     email = ma.auto_field(required=True)
     senha = ma.auto_field(required=True)
     telefone = ma.auto_field(required=True)
+    tipo = ma.auto_field(required=True, validate=validate.OneOf(Autoridade))
 
     @validates('senha')
     def validate_senha(self, senha, **kwargs):
