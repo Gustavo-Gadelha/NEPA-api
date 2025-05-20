@@ -3,7 +3,7 @@ from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from werkzeug.exceptions import NotFound, Unauthorized, Forbidden
 
-from app import db
+from app.extensions import db
 
 
 def register_error_handlers(app: Flask) -> None:

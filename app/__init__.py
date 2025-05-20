@@ -1,9 +1,6 @@
 import os
 
 from flask import Flask
-from flask_cors import CORS
-
-from app.extensions import db, migrate, jwt, argon2, api
 
 
 def create_app(env: str = None) -> Flask:
@@ -20,6 +17,7 @@ def create_app(env: str = None) -> Flask:
         case _:
             raise RuntimeError(f"Ambiente de execução '{env}' não reconhecido")
 
+    from app.extensions import db, migrate, jwt, argon2, api
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
@@ -28,6 +26,7 @@ def create_app(env: str = None) -> Flask:
 
     # Reference for Flask-CORS configuration and usage:
     # https://corydolphin.com/flask-cors/extension/
+    from flask_cors import CORS
     CORS(app)
 
     from app import models

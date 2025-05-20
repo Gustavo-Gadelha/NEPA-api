@@ -4,7 +4,7 @@ from uuid import UUID
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended.exceptions import JWTDecodeError
 
-from app import db
+from app.extensions import db
 from app.models.usuarios import Usuario
 
 
