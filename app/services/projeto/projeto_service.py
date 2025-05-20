@@ -1,51 +1,39 @@
-from typing import Any
 from uuid import UUID
 
-from app import db
+from app.extensions import db
 from app.models import Projeto
 from app.models.enums import StatusProjeto
-from app.schemas import projeto_schema
 
 
-def save(dados: dict[str, Any], professor_id: UUID, curso_id: UUID) -> Projeto:
-    projeto: Projeto = projeto_schema.load(dados, partial=True)
-    projeto.professor_id = professor_id
-    projeto.curso_id = curso_id
+class ProjetoService:
+    def __init__(self, engine=db):
+        self._db = engine
 
-    db.session.add(projeto)
-    db.session.commit()
-    return projeto
+    def save(self, projeto: Projeto) -> Projeto:
+        self._db.session.add(projeto)
+        self._db.session.commit()
+        return projeto
 
+    def get_or_404(self, _id: UUID) -> Projeto:
+        return self._db.get_or_404(Projeto, _id)
 
-def get_or_404(_id: UUID) -> Projeto:
-    return db.get_or_404(Projeto, _id)
+    def get_all(self, *filters) -> list[Projeto]:
+        if filters:
+            stmt = self._db.select(Projeto).filter(*filters)
+        else:
+            stmt = self._db.select(Projeto)
 
+        return self._db.session.scalars(stmt).all()
 
-def get_all() -> list[Projeto]:
-    return db.session.scalars(db.select(Projeto)).all()
+    def delete(self, _id: UUID) -> None:
+        projeto: Projeto = self.get_or_404(_id)
+        self._db.session.delete(projeto)
+        self._db.session.commit()
 
-
-def delete(_id: UUID) -> None:
-    projeto: Projeto = get_or_404(_id)
-    db.session.delete(projeto)
-    db.session.commit()
-
-
-def get_all_from(professor_id) -> list[Projeto]:
-    return db.session.scalars(db.select(Projeto).where(Projeto.professor_id == professor_id)).all()
-
-
-def get_all_approved() -> list[Projeto]:
-    return db.session.scalars(db.select(Projeto).where(Projeto.situacao == StatusProjeto.APROVADO)).all()
-
-
-def get_all_pending() -> list[Projeto]:
-    return db.session.scalars(db.select(Projeto).where(Projeto.situacao == StatusProjeto.PENDENTE)).all()
+    def alterar_status(self, _id: UUID, status: StatusProjeto) -> None:
+        projeto: Projeto = self.get_or_404(_id)
+        projeto.status = status
+        db.session.commit()
 
 
-def change_situation(projeto_id: UUID, status: StatusProjeto) -> Projeto:
-    projeto: Projeto = get_or_404(projeto_id)
-    projeto.status = status
-    db.session.commit()
-
-    return projeto
+projeto_service = ProjetoService()

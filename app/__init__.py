@@ -32,6 +32,7 @@ def create_app(env: str = None) -> Flask:
 
     from app import models
     from app import schemas
+    from app import services
 
     from app.routes import register_blueprints
     register_blueprints(api)

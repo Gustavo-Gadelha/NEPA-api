@@ -1,2 +1,22 @@
-from .projeto import projeto_service, inscricao_service
-from .usuarios import professor_service, usuario_service, aluno_service
+from .base import (
+    AuthService, auth_service
+)
+
+from .common import (
+    CursoService, curso_service
+)
+
+from .documentos import (
+    EditalService, edital_service
+)
+
+from .projeto import (
+    InscricaoService, inscricao_service,
+    ProjetoService, projeto_service
+)
+
+from .usuarios import (
+    AlunoService, aluno_service,
+    ProfessorService, professor_service,
+    UsuarioService, usuario_service
+)

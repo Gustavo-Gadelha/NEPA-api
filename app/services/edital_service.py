@@ -6,7 +6,7 @@ from uuid import UUID
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from app import db
+from app.extensions import db
 from app.config import UPLOADS_DIR, ALLOWED_EDITAIS_EXTENSIONS
 from app.models import Edital
 from app.schemas import edital_schema
