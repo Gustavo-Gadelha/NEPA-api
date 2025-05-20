@@ -23,7 +23,7 @@ UPLOADS_DIR.mkdir(exist_ok=True)
 EDITAIS_DIR: Path = UPLOADS_DIR / 'editais'
 EDITAIS_DIR.mkdir(exist_ok=True)
 
-PASSWORD_LENGTH: int = 8
+MIN_PASSWORD_LENGTH: int = 8
 
 
 class _Config(object):
