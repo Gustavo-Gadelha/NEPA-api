@@ -17,13 +17,9 @@ def register_jwt_callbacks(jwt: JWTManager) -> None:
     def add_claims(usuario: Usuario) -> dict[str, Any]:
         return {
             'nome': usuario.nome,
-            'email': usuario.email,
-            'matricula': usuario.matricula,
-            'curso': {
-                'id': usuario.curso.id,
-                'nome': usuario.curso.nome,
-            },
-            'autoridade': usuario.autoridade.value
+            'ativo': usuario.ativo,
+            'autoridade': usuario.autoridade.value,
+            'tipo': usuario.tipo
         }
 
     @jwt.user_lookup_loader
