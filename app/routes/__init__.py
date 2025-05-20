@@ -3,19 +3,15 @@ from flask_smorest import Api
 from .common import (
     curso_bp
 )
-
 from .documentos import (
     edital_bp
 )
-
 from .projeto import (
     projeto_bp
 )
-
 from .public import (
     auth_bp
 )
-
 from .usuarios import (
     aluno_bp,
     professor_bp,
