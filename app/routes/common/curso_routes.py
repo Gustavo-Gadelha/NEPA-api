@@ -25,7 +25,6 @@ def listar_cursos():
 
 
 @curso_bp.route('/<uuid:curso_id>', methods=['GET'])
-@requires_any(Autoridade.ADMIN)
 @curso_bp.response(200, CursoOutSchema)
 def exibir_curso_id(curso_id):
     return curso_service.get_or_404(curso_id)
