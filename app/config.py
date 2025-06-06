@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Any
 
 from flask.cli import load_dotenv
 
@@ -34,7 +35,6 @@ class _Config(object):
 
     API_TITLE: str = os.getenv('API_TITLE')
     API_VERSION: str = os.getenv('API_VERSION')
-    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
 
 
 class ProductionConfig(_Config):
@@ -57,10 +57,25 @@ class DevelopmentConfig(_Config):
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = True
     CORS_ORIGINS: list[str] = ['*']
 
+    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
     OPENAPI_URL_PREFIX: str = os.getenv('OPENAPI_URL_PREFIX')
     OPENAPI_SWAGGER_UI_PATH: str = os.getenv('OPENAPI_SWAGGER_UI_PATH')
     OPENAPI_SWAGGER_UI_URL: str = os.getenv('OPENAPI_SWAGGER_UI_URL')
     PROPAGATE_EXCEPTIONS: bool = True
+
+    API_SPEC_OPTIONS: dict[str, Any] = {
+        'security': [{'bearerAuth': []}],
+        'components': {
+            'securitySchemes': {
+                'Bearer Auth': {
+                    'type': 'apiKey',
+                    'in': 'header',
+                    'name': 'Authorization',
+                    'bearerFormat': 'JWT',
+                }
+            }
+        }
+    }
 
 
 class TestingConfig(_Config):
