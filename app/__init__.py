@@ -33,6 +33,9 @@ def create_app(env: str = None) -> Flask:
     from app import schemas
     from app import services
 
+    from app.interceptors import register_interceptors
+    register_interceptors(app)
+
     from app.handlers import register_error_handlers
     register_error_handlers(app)
 

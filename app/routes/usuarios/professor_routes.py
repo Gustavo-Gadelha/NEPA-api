@@ -1,7 +1,5 @@
 from flask import jsonify
-from flask_jwt_extended import current_user, jwt_required
 from flask_smorest import Blueprint
-from werkzeug.exceptions import Forbidden
 
 from app.jwt import requires_any
 from app.models import Professor
@@ -10,15 +8,6 @@ from app.schemas import ProfessorInSchema, ProfessorOutSchema
 from app.services import professor_service
 
 professor_bp = Blueprint('professor', __name__, description='Rotas que modificam professores')
-
-
-@professor_bp.before_request
-@jwt_required()
-def checar_usuario():
-    if not current_user.ativo:
-        raise Forbidden('Acesso negado, usuário não está ativo')
-
-    return None
 
 
 @professor_bp.route('/', methods=['POST'])

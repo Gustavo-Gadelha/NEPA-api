@@ -1,7 +1,5 @@
 from flask import jsonify
-from flask_jwt_extended import jwt_required, current_user
 from flask_smorest import Blueprint
-from werkzeug.exceptions import Forbidden
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
@@ -9,15 +7,6 @@ from app.schemas import UsuarioOutSchema, UsuarioInSchema
 from app.services import usuario_service
 
 usuario_bp = Blueprint('usuario', __name__, description='Rotas que modificam usuários')
-
-
-@usuario_bp.before_request
-@jwt_required()
-def checar_usuario():
-    if not current_user.ativo:
-        raise Forbidden('Acesso negado, usuário não está ativo')
-
-    return None
 
 
 @usuario_bp.route('/<uuid:usuario_id>/ativar', methods=['POST'])

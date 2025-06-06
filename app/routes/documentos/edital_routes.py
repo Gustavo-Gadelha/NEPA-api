@@ -1,9 +1,7 @@
 from pathlib import Path
 
 from flask import jsonify, send_file
-from flask_jwt_extended import current_user, jwt_required
 from flask_smorest import Blueprint
-from werkzeug.exceptions import Forbidden
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
@@ -11,15 +9,6 @@ from app.schemas import EditalInSchema, EditalOutSchema, EditalFileInSchema
 from app.services import edital_service
 
 edital_bp = Blueprint('edital', __name__, description='Rotas que modificam editais')
-
-
-@edital_bp.before_request
-@jwt_required()
-def checar_usuario():
-    if not current_user.ativo:
-        raise Forbidden('Acesso negado, usuário não está ativo')
-
-    return None
 
 
 @edital_bp.route('/', methods=['POST'])
