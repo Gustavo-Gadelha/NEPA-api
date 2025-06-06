@@ -67,11 +67,10 @@ class DevelopmentConfig(_Config):
         'security': [{'bearerAuth': []}],
         'components': {
             'securitySchemes': {
-                'Bearer Auth': {
-                    'type': 'apiKey',
-                    'in': 'header',
-                    'name': 'Authorization',
-                    'bearerFormat': 'JWT',
+                'bearerAuth': {
+                    'type': 'http',
+                    'scheme': 'bearer',
+                    'bearerFormat': 'JWT'
                 }
             }
         }
