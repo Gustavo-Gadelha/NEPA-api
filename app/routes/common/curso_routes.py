@@ -30,7 +30,6 @@ def criar_curso():
 
 
 @curso_bp.route('/', methods=['GET'])
-@requires_any(Autoridade.ADMIN)
 @curso_bp.response(200, CursoOutSchema(many=True))
 def listar_cursos():
     return curso_service.get_all()
