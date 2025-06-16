@@ -1,8 +1,8 @@
-import uuid
 from pathlib import Path
 from uuid import UUID
 
 from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
 
 from app.config import EDITAIS_DIR
 from app.extensions import db
@@ -14,7 +14,9 @@ class EditalService:
         self._db = engine
 
     def save(self, edital: Edital, arquivo: FileStorage) -> Edital:
-        edital.caminho_arquivo = uuid.uuid4().hex
+        filename = secure_filename(arquivo.filename)
+        ext = filename.rsplit('.', 1)[1].lower()
+        edital.caminho_arquivo = f'{edital.slug}.{ext}'
         self._db.session.add(edital)
         self._db.session.commit()
 
