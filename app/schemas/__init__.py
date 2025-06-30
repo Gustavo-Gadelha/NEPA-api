@@ -1,31 +1,50 @@
 from .base import (
-    LoginInSchema, TokensOutSchema, RedefinirSenhaInSchema,
+    LoginInSchema,
+    TokensOutSchema,
+    RedefinirSenhaInSchema,
 )
 
 from .common import (
-    CursoInSchema, CursoOutSchema
+    CursoInSchema,
+    CursoOutSchema
 )
 
 from .documentos import (
-    EditalInSchema, EditalOutSchema, EditalFileInSchema,
-    RelatorioBolsistaInSchema, RelatorioBolsistaOutSchema,
-    RelatorioCoordenadorInSchema, RelatorioCoordenadorOutSchema
+    EditalInSchema,
+    EditalOutSchema,
+    EditalFileInSchema,
+    RelatorioBolsistaInSchema,
+    RelatorioBolsistaOutSchema,
+    RelatorioCoordenadorInSchema,
+    RelatorioCoordenadorOutSchema
 )
 
 from .frequencias import (
-    FrequenciaSemanalInSchema, FrequenciaSemanalOutSchema,
-    PresencaInSchema, PresencaOutSchema
+    ControleMensalInSchema,
+    ControleMensalOutSchema,
+    FrequenciaSemanalInSchema,
+    FrequenciaSemanalOutSchema,
+    PresencaInSchema,
+    PresencaOutSchema
 )
 
 from .projeto import (
-    AtividadeInSchema, AtividadeOutSchema,
-    InscricaoInSchema, InscricaoOutSchema,
-    ProjetoInSchema, ProjetoOutSchema, ProjetoStatusSchema
+    AtividadeInSchema,
+    AtividadeOutSchema,
+    InscricaoInSchema,
+    InscricaoOutSchema,
+    ProjetoInSchema,
+    ProjetoOutSchema,
+    ProjetoStatusSchema
 )
 
 from .usuarios import (
-    AdminInSchema, AdminOutSchema,
-    AlunoInSchema, AlunoOutSchema,
-    ProfessorInSchema, ProfessorOutSchema,
-    UsuarioInSchema, UsuarioOutSchema
+    AdminInSchema,
+    AdminOutSchema,
+    AlunoInSchema,
+    AlunoOutSchema,
+    ProfessorInSchema,
+    ProfessorOutSchema,
+    UsuarioInSchema,
+    UsuarioOutSchema
 )

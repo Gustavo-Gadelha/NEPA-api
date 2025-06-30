@@ -27,4 +27,3 @@ class FrequenciaSemanalOutSchema(ma.SQLAlchemySchema):
     tempo_termino = ma.auto_field()
     descricao = ma.auto_field()
     observacao = ma.auto_field()
-    controle_mensal_id = ma.auto_field()

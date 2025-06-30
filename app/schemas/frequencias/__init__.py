@@ -1,2 +1,3 @@
+from .controle_mensal_schemas import ControleMensalInSchema, ControleMensalOutSchema
 from .frequencia_semanal_schemas import FrequenciaSemanalInSchema, FrequenciaSemanalOutSchema
 from .presenca_schemas import PresencaInSchema, PresencaOutSchema

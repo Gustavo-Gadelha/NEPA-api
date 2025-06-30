@@ -23,4 +23,3 @@ class PresencaOutSchema(ma.SQLAlchemySchema):
     presente = ma.auto_field()
     justificativa = ma.auto_field()
     aluno_id = ma.auto_field()
-    frequencia_semanal_id = ma.auto_field()
