@@ -17,7 +17,7 @@ class EditalInSchema(ma.SQLAlchemySchema):
 
 
 class EditalArquivoInSchema(ma.Schema):
-    arquivo = Upload(required=True, allow_none=False)
+    arquivo = Upload(format='binary', required=True, allow_none=False)
 
     @validates('arquivo')
     def validate_arquivo(self, arquivo):
@@ -25,7 +25,7 @@ class EditalArquivoInSchema(ma.Schema):
         if '.' not in filename:
             raise ValidationError('Arquivo sem extensão')
 
-        ext = filename.rsplit('.', 1)[1].lower()
+        ext = filename.split('.', 1)[1].lower()
         if ext not in ALLOWED_EDITAIS_EXTENSIONS:
             raise ValidationError(f'Extensão não permitida: .{ext}')
 
