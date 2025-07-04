@@ -29,6 +29,8 @@ MIN_PASSWORD_LENGTH: int = 8
 
 
 class _Config(object):
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+
     SECRET_KEY: str = os.getenv('SECRET_KEY')
     MAX_CONTENT_LENGTH: int = int(os.getenv('MAX_CONTENT_LENGHT', MAX_FILE_SIZE))
     CORS_SUPPORTS_CREDENTIALS: bool = True
@@ -43,7 +45,6 @@ class _Config(object):
 class ProductionConfig(_Config):
     DEBUG: bool = False
     SQLALCHEMY_DATABASE_URI: str = os.getenv('PRODUCTION_DATABASE_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     CORS_ORIGINS: list[str] = os.getenv('CORS_ORIGINS', '').split(',')
     if not CORS_ORIGINS:
         raise ValueError('Variável CORS_ORIGINS não encontrada ou vazia')
@@ -57,7 +58,7 @@ class ProductionConfig(_Config):
 class DevelopmentConfig(_Config):
     DEBUG: bool = True
     SQLALCHEMY_DATABASE_URI: str = os.getenv('DEVELOPMENT_DATABASE_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS: bool = True
+    SQLALCHEMY_ECHO = True
     CORS_ORIGINS: list[str] = ['*']
 
     OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
@@ -83,5 +84,4 @@ class DevelopmentConfig(_Config):
 class TestingConfig(_Config):
     TESTING: bool = True
     SQLALCHEMY_DATABASE_URI: str = os.getenv('TEST_DATABASE_URI')
-    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     CORS_ORIGINS: list[str] = ['*']
