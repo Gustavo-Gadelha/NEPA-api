@@ -1,3 +1,0 @@
-from .controle_mensal_service import ControleMensalService, controle_mensal_service
-from .frequencia_semanal_service import FrequenciaSemanalService, frequencia_semanal_service
-from .presenca_service import PresencaService, presenca_service

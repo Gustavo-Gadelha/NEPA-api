@@ -30,8 +30,6 @@ def create_app(env: str = None) -> Flask:
     CORS(app)
 
     from app import models
-    from app import schemas
-    from app import services
 
     from app.interceptors import register_interceptors
     register_interceptors(app)
@@ -42,7 +40,7 @@ def create_app(env: str = None) -> Flask:
     from app.jwt import register_jwt_callbacks
     register_jwt_callbacks(jwt_manager)
 
-    from app.routes import register_blueprints
+    from app.resources import register_blueprints
     register_blueprints(api)
 
     return app
