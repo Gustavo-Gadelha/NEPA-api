@@ -17,6 +17,10 @@ class ProfessorInSchema(ma.SQLAlchemySchema):
     tipo = ma.auto_field(required=True)
 
 
+class ProfessorQueryArgsSchema(ma.Schema):
+    ativo = ma.Bool()
+
+
 class ProfessorPatchInSchema(ma.Schema):
     ativo = ma.Bool()
 

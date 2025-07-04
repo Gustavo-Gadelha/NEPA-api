@@ -3,7 +3,7 @@ from flask_smorest import Blueprint
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
-from .schemas import ProfessorInSchema, ProfessorOutSchema, ProfessorPatchInSchema
+from .schemas import ProfessorOutSchema, ProfessorQueryArgsSchema, ProfessorPatchInSchema
 from .services import professor_service
 
 professor_blp = Blueprint('professores', __name__, url_prefix='/professores', description='Modulo de professors')
@@ -13,15 +13,10 @@ professor_blp = Blueprint('professores', __name__, url_prefix='/professores', de
 class ProfessorList(MethodView):
 
     @requires_any(Autoridade.ADMIN)
+    @professor_blp.arguments(ProfessorQueryArgsSchema, location='query', as_kwargs=True)
     @professor_blp.response(200, ProfessorOutSchema(many=True))
-    def get(self):
-        return professor_service.get_all()
-
-    @requires_any(Autoridade.ADMIN)
-    @professor_blp.arguments(ProfessorInSchema)
-    @professor_blp.response(201, ProfessorOutSchema)
-    def post(self, professor):
-        return professor_service.save(professor)
+    def get(self, **kwargs):
+        return professor_service.get_all(**kwargs)
 
 
 @professor_blp.route('/<uuid:professor_id>')
