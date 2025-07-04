@@ -47,5 +47,4 @@ class CRUDService[M]:
 
     def delete_by_id(self, _id: UUID) -> None:
         obj = self.get_or_404(_id)
-        self._db.session.delete(obj)
-        self._db.session.commit()
+        return self.delete(obj)
