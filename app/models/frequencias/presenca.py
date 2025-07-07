@@ -9,9 +9,6 @@ class Presenca(db.Model, TimestampMixin, LogMixin):
 
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
-    presente = db.Column(db.Boolean, default=False, nullable=False)
-    justificativa = db.Column(db.Text, nullable=True)
-
     aluno_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('aluno.id'), nullable=False)
     aluno = db.relationship('Aluno', foreign_keys='Presenca.aluno_id', back_populates='presencas')
 
