@@ -37,6 +37,7 @@ class _Config(object):
 
     API_TITLE: str = os.getenv('API_TITLE')
     API_VERSION: str = os.getenv('API_VERSION')
+    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
 
     JWT_SECRET: str = os.getenv('JWT_SECRET')
     JWT_ACCESS_TOKEN_EXPIRES: timedelta = timedelta(days=1)
@@ -61,7 +62,6 @@ class DevelopmentConfig(_Config):
     SQLALCHEMY_ECHO = True
     CORS_ORIGINS: list[str] = ['*']
 
-    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION')
     OPENAPI_URL_PREFIX: str = os.getenv('OPENAPI_URL_PREFIX')
     OPENAPI_SWAGGER_UI_PATH: str = os.getenv('OPENAPI_SWAGGER_UI_PATH')
     OPENAPI_SWAGGER_UI_URL: str = os.getenv('OPENAPI_SWAGGER_UI_URL')
