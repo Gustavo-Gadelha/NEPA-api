@@ -1,36 +1,34 @@
 from functools import wraps
+from typing import Callable
 
-from flask import jsonify
 from flask_jwt_extended import verify_jwt_in_request, current_user
+from werkzeug.exceptions import Forbidden
 
 from app.models.enums import Autoridade
 
 
-def requires_any(*autoridades: Autoridade):
-    def wrapper(fn):
+def authorize(*autoridades: Autoridade, permitir: bool = True) -> Callable:
+    def decorator(fn):
         @wraps(fn)
-        def decorator(*args, **kwargs):
+        def wrapper(*args, **kwargs):
             verify_jwt_in_request()
-            if current_user.autoridade not in autoridades:
-                return jsonify({'message': 'Acesso negado, você não tem permissão para acessar este recurso'}), 403
+            tem_autoridade = current_user.autoridade in autoridades
+
+            if permitir and not tem_autoridade:
+                raise Forbidden('Você não tem autorização para realizar esta ação')
+            if not permitir and tem_autoridade:
+                raise Forbidden('Você não tem autorização para realizar esta ação')
 
             return fn(*args, **kwargs)
 
-        return decorator
+        return wrapper
 
-    return wrapper
+    return decorator
 
 
-def forbids_any(*autoridades: Autoridade):
-    def wrapper(fn):
-        @wraps(fn)
-        def decorator(*args, **kwargs):
-            verify_jwt_in_request()
-            if current_user.autoridade in autoridades:
-                return jsonify({'message': 'Acesso negado, você não tem permissão para acessar este recurso'}), 403
+def requires_any(*autoridades: Autoridade) -> Callable:
+    return authorize(*autoridades, permitir=True)
 
-            return fn(*args, **kwargs)
 
-        return decorator
-
-    return wrapper
+def forbids_any(*autoridades: Autoridade) -> Callable:
+    return authorize(*autoridades, permitir=False)
