@@ -19,6 +19,14 @@ class CRUDService[M]:
         stmt = self._db.select(self._db.exists().where(self.model.id == _id))
         return self._db.session.scalar(stmt)
 
+    def first(self, **filters):
+        stmt = self._db.select(self.model).filter_by(**filters).limit(1)
+        return self._db.session.scalars(stmt).first()
+
+    def one(self, **filters):
+        stmt = self._db.select(self.model).filter_by(**filters)
+        return self._db.session.scalars(stmt).one()
+
     def get(self, _id: UUID) -> Optional[M]:
         return self._db.session.get(self.model, _id)
 
@@ -26,11 +34,7 @@ class CRUDService[M]:
         return self._db.get_or_404(self.model, _id)
 
     def get_all(self, **filters) -> list[M]:
-        if filters:
-            stmt = self._db.select(self.model).filter_by(**filters)
-        else:
-            stmt = self._db.select(self.model)
-
+        stmt = self._db.select(self.model).filter_by(**filters)
         return self._db.session.scalars(stmt).all()
 
     def update(self, _id: UUID, dados: dict[Any, str]) -> M:
