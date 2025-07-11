@@ -1,23 +1,20 @@
 from flask.views import MethodView
 from flask_jwt_extended import current_user
 from flask_smorest import Blueprint
-from werkzeug.exceptions import Forbidden, Conflict
+from werkzeug.exceptions import Forbidden
 
 from app.jwt import requires_any
 from app.models import Projeto
-from app.models.enums import Autoridade, StatusProjeto
+from app.models.enums import Autoridade
 from .schemas import (
     ProjetoInSchema,
     ProjetoQueryArgsSchema,
     ProjetoPatchInSchema,
-    ProjetoOutSchema,
-    InscricaoInSchema,
-    InscricaoPatchInSchema,
-    InscricaoOutSchema
+    ProjetoOutSchema
 )
-from .services import projeto_service, inscricao_service
+from .services import projeto_service
 
-projeto_blp = Blueprint('projetos', __name__, url_prefix='/projetos', description='Modulo de projetos')
+projeto_blp = Blueprint('projetos', __name__, description='Modulo de projetos')
 
 
 @projeto_blp.route('/')
@@ -68,62 +65,3 @@ class ProjetoDetail(MethodView):
             raise Forbidden
 
         return projeto_service.delete(projeto)
-
-
-inscricao_blp = Blueprint('inscricoes', __name__, description='Modulo de inscrições')
-
-
-@inscricao_blp.route('/<uuid:projeto_id>/inscricoes')
-class InscricaoList(MethodView):
-
-    @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
-    @projeto_blp.response(200, InscricaoOutSchema(many=True))
-    def get(self, projeto_id):
-        projeto: Projeto = projeto_service.get_or_404(projeto_id)
-
-        if current_user.autoridade == Autoridade.ADMIN:
-            return inscricao_service.get_by_project(projeto_id)
-        if not current_user.id == projeto.professor_id:
-            raise Forbidden
-
-        return inscricao_service.get_by_project(projeto_id)
-
-    @requires_any(Autoridade.ALUNO)
-    @projeto_blp.arguments(InscricaoInSchema)
-    @projeto_blp.response(200, InscricaoOutSchema)
-    def post(self, projeto_id, inscricao):
-        projeto = projeto_service.get_or_404(projeto_id)
-
-        if not projeto.status == StatusProjeto.APROVADO:
-            raise Conflict('Este projeto ainda não foi aprovado')
-        if projeto.vagas_ocupadas >= projeto.vagas_totais:
-            raise Conflict('Não há vagas disponiveis para este projeto')
-        if inscricao_service.exists_for(projeto_id, current_user.id):
-            raise Conflict('O aluno já está inscrito neste projeto')
-
-        projeto.vagas_ocupadas += 1
-        return inscricao_service.save(inscricao)
-
-
-@inscricao_blp.route('/<uuid:projeto_id>/inscricoes/<incricao_id>')
-class InscricaoDetail(MethodView):
-
-    @requires_any(Autoridade.PROFESSOR)
-    @projeto_blp.response(200, InscricaoOutSchema)
-    def get(self, projeto_id, incricao_id):
-        if not projeto_service.is_owner(projeto_id, current_user):
-            raise Forbidden('Este professor não pode alterar este projeto')
-
-        return inscricao_service.get(incricao_id)
-
-    @requires_any(Autoridade.PROFESSOR)
-    @projeto_blp.arguments(InscricaoPatchInSchema)
-    @projeto_blp.response(200, InscricaoOutSchema)
-    def patch(self, projeto_id, incricao_id, dados):
-        if not projeto_service.is_owner(projeto_id, current_user):
-            raise Forbidden('Este professor não pode alterar este projeto')
-
-        return inscricao_service.update(incricao_id, dados)
-
-
-projeto_blp.register_blueprint(inscricao_blp)
