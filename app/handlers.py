@@ -2,7 +2,7 @@ from flask import jsonify, Flask
 from flask_jwt_extended.exceptions import JWTDecodeError
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from werkzeug.exceptions import NotFound, Unauthorized, Forbidden
+from werkzeug.exceptions import NotFound, Unauthorized, Forbidden, Conflict
 
 from app.extensions import db
 
@@ -23,6 +23,10 @@ def register_error_handlers(app: Flask) -> None:
     @app.errorhandler(NotFound)
     def handle_not_found_error(error: NotFound):
         return jsonify({'message': 'Recurso não encontrado', 'error': error.description}), 404
+
+    @app.errorhandler(Conflict)
+    def handle_not_found_error(error: Conflict):
+        return jsonify({'message': 'Conflito ao salvar dados', 'error': error.description}), 409
 
     @app.errorhandler(Unauthorized)
     def handle_unauthorized_error(error: Unauthorized):
