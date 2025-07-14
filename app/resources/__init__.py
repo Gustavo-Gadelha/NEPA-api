@@ -2,8 +2,10 @@ from flask_smorest import Api
 
 from .alunos import aluno_blp
 from .auth import auth_blp
+from .controles import controle_blp
 from .cursos import curso_blp
 from .editais import edital_blp
+from .frequencias import frequencia_blp
 from .professores import professor_blp
 from .projetos import projeto_blp
 from .projetos.incricoes import inscricao_blp
@@ -17,6 +19,10 @@ routes = {
     '/projetos': {
         '/': projeto_blp,
         '/<uuid:projeto_id>/inscricoes': inscricao_blp
+    },
+    '/controles': {
+        '/': controle_blp,
+        '/<uuid:controle_id>/frequencias': frequencia_blp
     },
 }
 

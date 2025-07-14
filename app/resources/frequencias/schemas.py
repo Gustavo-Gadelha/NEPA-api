@@ -1,26 +1,7 @@
+from marshmallow_sqlalchemy.fields import Related, Nested
+
 from app.extensions import ma
-from app.models import ControleMensal, FrequenciaSemanal, Presenca
-
-
-class ControleMensalInSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = ControleMensal
-        load_instance = True
-
-    ano = ma.auto_field(required=True)
-    mes = ma.auto_field(required=True)
-    projeto_id = ma.auto_field(required=True)
-
-
-class ControleMensalOutSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = ControleMensal
-        include_fk = True
-
-    id = ma.auto_field()
-    ano = ma.auto_field()
-    mes = ma.auto_field()
-    projeto_id = ma.auto_field()
+from app.models import FrequenciaSemanal, Presenca
 
 
 class FrequenciaSemanalInSchema(ma.SQLAlchemySchema):
@@ -33,7 +14,12 @@ class FrequenciaSemanalInSchema(ma.SQLAlchemySchema):
     tempo_termino = ma.auto_field(required=True)
     descricao = ma.auto_field()
     observacao = ma.auto_field()
-    controle_mensal_id = ma.auto_field(required=True)
+    alunos_presentes = Nested('PresencaInSchema', many=True)
+
+
+class FrequenciaSemanalArgsSchema(ma.Schema):
+    realizada_em = ma.Date(required=False)
+    controle_mensal_id = ma.UUID(required=False)
 
 
 class FrequenciaSemanalOutSchema(ma.SQLAlchemySchema):
@@ -47,6 +33,7 @@ class FrequenciaSemanalOutSchema(ma.SQLAlchemySchema):
     tempo_termino = ma.auto_field()
     descricao = ma.auto_field()
     observacao = ma.auto_field()
+    alunos_presentes = Nested('PresencaOutSchema', many=True)
 
 
 class PresencaInSchema(ma.SQLAlchemySchema):
@@ -54,10 +41,7 @@ class PresencaInSchema(ma.SQLAlchemySchema):
         model = Presenca
         load_instance = True
 
-    presente = ma.auto_field(required=True)
-    justificativa = ma.auto_field()
     aluno_id = ma.auto_field(required=True)
-    frequencia_semanal_id = ma.auto_field(required=True)
 
 
 class PresencaOutSchema(ma.SQLAlchemySchema):
@@ -65,7 +49,5 @@ class PresencaOutSchema(ma.SQLAlchemySchema):
         model = Presenca
         include_fk = True
 
-    id = ma.auto_field()
-    presente = ma.auto_field()
-    justificativa = ma.auto_field()
     aluno_id = ma.auto_field()
+    nome = Related(['nome'])
