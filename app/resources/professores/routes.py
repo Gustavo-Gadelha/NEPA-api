@@ -31,7 +31,7 @@ class ProfessorDetail(MethodView):
     @professor_blp.arguments(ProfessorPatchInSchema)
     @professor_blp.response(200, ProfessorOutSchema)
     def patch(self, professor_id, dados):
-        return professor_service.update(professor_id, dados)
+        return professor_service.patch(professor_id, dados)
 
     @requires_any(Autoridade.ADMIN)
     @professor_blp.response(204)

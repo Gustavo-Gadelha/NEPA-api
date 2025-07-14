@@ -67,4 +67,4 @@ class InscricaoDetail(MethodView):
         if not projeto_service.is_owner(projeto_id, current_user):
             raise Forbidden('Este professor não pode alterar este projeto')
 
-        return inscricao_service.update(incricao_id, dados)
+        return inscricao_service.patch(incricao_id, dados)

@@ -53,8 +53,8 @@ class ProjetoDetail(MethodView):
     @requires_any(Autoridade.ADMIN)
     @projeto_blp.arguments(ProjetoPatchInSchema)
     @projeto_blp.response(200, ProjetoOutSchema)
-    def patch(self, projeto_id, dados):
-        return projeto_service.update(projeto_id, dados)
+    def patch(self, dados, projeto_id):
+        return projeto_service.patch(projeto_id, dados)
 
     @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
     @projeto_blp.response(204)

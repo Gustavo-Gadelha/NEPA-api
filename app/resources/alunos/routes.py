@@ -31,7 +31,7 @@ class AlunoDetail(MethodView):
     @aluno_blp.arguments(AlunoPatchInSchema)
     @aluno_blp.response(200, AlunoOutSchema)
     def patch(self, aluno_id, dados):
-        return aluno_service.update(aluno_id, dados)
+        return aluno_service.patch(aluno_id, dados)
 
     @requires_any(Autoridade.ADMIN)
     @aluno_blp.response(204)

@@ -37,9 +37,9 @@ class CRUDService[M]:
         stmt = self._db.select(self.model).filter_by(**filters)
         return self._db.session.scalars(stmt).all()
 
-    def update(self, _id: UUID, dados: dict[Any, str]) -> M:
+    def patch(self, _id: UUID, dados: dict[str, Any]) -> M:
         obj = self.get_or_404(_id)
-        for key, value in dados:
+        for key, value in dados.items():
             setattr(obj, key, value)
 
         self._db.session.commit()
