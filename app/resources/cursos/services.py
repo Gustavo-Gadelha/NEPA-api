@@ -1,5 +1,5 @@
+from app.core import CRUDService
 from app.models import Curso
-from app.resources.core import CRUDService
 
 
 class CursoService(CRUDService[Curso]):

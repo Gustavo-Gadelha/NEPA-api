@@ -29,6 +29,7 @@ def create_app(env: str = None) -> Flask:
     from flask_cors import CORS
     CORS(app)
 
+    from app import core
     from app import models
 
     from app.interceptors import register_interceptors

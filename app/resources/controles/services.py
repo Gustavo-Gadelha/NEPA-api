@@ -1,5 +1,5 @@
+from app.core import CRUDService
 from app.models import ControleMensal
-from app.resources.core import CRUDService
 
 
 class ControleMensalService(CRUDService[ControleMensal]):

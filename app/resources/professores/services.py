@@ -1,7 +1,7 @@
 from uuid import UUID
 
+from app.core import CRUDService
 from app.models import Professor
-from app.resources.core import CRUDService
 
 
 class ProfessorService(CRUDService[Professor]):

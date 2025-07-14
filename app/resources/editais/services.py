@@ -7,8 +7,8 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import NotFound
 
 from app.config import EDITAIS_DIR
+from app.core import CRUDService
 from app.models import Edital
-from app.resources.core import CRUDService
 
 
 class EditalService(CRUDService[Edital]):

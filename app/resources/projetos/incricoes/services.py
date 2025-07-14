@@ -1,5 +1,5 @@
+from app.core import CRUDService
 from app.models import Inscricao
-from app.resources.core import CRUDService
 
 
 class InscricaoService(CRUDService[Inscricao]):
