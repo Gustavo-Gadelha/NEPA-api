@@ -7,11 +7,7 @@ from app.jwt import requires_any
 from app.models import Projeto
 from app.models.enums import Autoridade, StatusProjeto
 from app.resources.projetos import projeto_service
-from .schemas import (
-    InscricaoInSchema,
-    InscricaoPatchInSchema,
-    InscricaoOutSchema
-)
+from .schemas import InscricaoPatchInSchema, InscricaoOutSchema
 from .services import inscricao_service
 
 inscricao_blp = Blueprint('inscricoes', __name__, description='Modulo de inscrições')
@@ -33,7 +29,6 @@ class InscricaoList(MethodView):
         return inscricao_service.get_all(projeto_id=projeto_id)
 
     @requires_any(Autoridade.ALUNO)
-    @inscricao_blp.arguments(InscricaoInSchema)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def post(self, projeto_id, inscricao):
         projeto = projeto_service.get_or_404(projeto_id)
