@@ -34,6 +34,7 @@ class ProjetoInSchema(ma.SQLAlchemySchema):
 
 class ProjetoQueryArgsSchema(ma.Schema):
     status = ma.Enum(StatusProjeto, required=False, by_value=False)
+    curso_id = ma.UUID(required=False)
 
 
 class ProjetoPatchInSchema(ma.Schema):
