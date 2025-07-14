@@ -6,7 +6,7 @@ from app.resources.cursos import curso_service
 
 
 class LoginInSchema(ma.Schema):
-    login = ma.Email(required=True)
+    login = ma.String(required=True)
     senha = ma.String(required=True)
 
 
