@@ -11,7 +11,6 @@ class Aluno(Usuario):
 
     projetos = db.relationship('Inscricao', back_populates='aluno')
     atividades = db.relationship('Atividade', back_populates='aluno')
-    presencas = db.relationship('Presenca', back_populates='aluno')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -18,5 +18,7 @@ class Inscricao(db.Model, TimestampMixin, LogMixin):
     projeto_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('projeto.id'), nullable=False)
     projeto = db.relationship('Projeto', back_populates='inscricoes', foreign_keys='Inscricao.projeto_id')
 
+    presencas = db.relationship('Presenca', back_populates='inscricao')
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

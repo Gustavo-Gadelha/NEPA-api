@@ -1,4 +1,4 @@
-from marshmallow_sqlalchemy.fields import Related, Nested
+from marshmallow_sqlalchemy.fields import Nested
 
 from app.extensions import ma
 from app.models import FrequenciaSemanal, Presenca
@@ -41,7 +41,8 @@ class PresencaInSchema(ma.SQLAlchemySchema):
         model = Presenca
         load_instance = True
 
-    aluno_id = ma.auto_field(required=True)
+    inscricao_id = ma.auto_field(required=True)
+    presente = ma.auto_field(required=True)
 
 
 class PresencaOutSchema(ma.SQLAlchemySchema):
@@ -49,5 +50,5 @@ class PresencaOutSchema(ma.SQLAlchemySchema):
         model = Presenca
         include_fk = True
 
-    aluno_id = ma.auto_field()
-    nome = Related(['nome'])
+    inscricao_id = ma.auto_field()
+    presente = ma.auto_field()
