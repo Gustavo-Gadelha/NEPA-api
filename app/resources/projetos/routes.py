@@ -29,6 +29,8 @@ class ProjetoList(MethodView):
     @projeto_blp.arguments(ProjetoInSchema)
     @projeto_blp.response(201, ProjetoOutSchema)
     def post(self, projeto):
+        projeto.professor_id = current_user.id
+        projeto.curso_id = current_user.curso_id
         return projeto_service.save(projeto)
 
 
