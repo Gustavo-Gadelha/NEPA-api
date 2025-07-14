@@ -26,11 +26,11 @@ class InscricaoList(MethodView):
         projeto: Projeto = projeto_service.get_or_404(projeto_id)
 
         if current_user.autoridade == Autoridade.ADMIN:
-            return inscricao_service.get_by_project(projeto_id)
+            return inscricao_service.get_all(projeto_id=projeto_id)
         if not current_user.id == projeto.professor_id:
             raise Forbidden
 
-        return inscricao_service.get_by_project(projeto_id)
+        return inscricao_service.get_all(projeto_id=projeto_id)
 
     @requires_any(Autoridade.ALUNO)
     @inscricao_blp.arguments(InscricaoInSchema)
