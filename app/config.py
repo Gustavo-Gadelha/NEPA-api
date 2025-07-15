@@ -46,7 +46,7 @@ class _Config(object):
 class ProductionConfig(_Config):
     DEBUG: bool = False
     SQLALCHEMY_DATABASE_URI: str = os.getenv('PRODUCTION_DATABASE_URI')
-    CORS_ORIGINS: list[str] = os.getenv('CORS_ORIGINS', '').split(',')
+    CORS_ORIGINS: list[str] = [origin.strip() for origin in os.getenv('CORS_ORIGINS', '')]
     if not CORS_ORIGINS:
         raise ValueError('Variável CORS_ORIGINS não encontrada ou vazia')
 
