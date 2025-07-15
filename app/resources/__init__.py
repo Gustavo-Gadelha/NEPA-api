@@ -6,9 +6,9 @@ from .controles import controle_blp
 from .cursos import curso_blp
 from .editais import edital_blp
 from .frequencias import frequencia_blp
+from .incricoes import inscricao_blp
 from .professores import professor_blp
 from .projetos import projeto_blp
-from .projetos.incricoes import inscricao_blp
 
 routes = {
     '/auth': auth_blp,
