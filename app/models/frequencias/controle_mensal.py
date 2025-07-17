@@ -1,18 +1,19 @@
 import uuid
 
-from sqlalchemy import func
-
 from app.extensions import db
 from app.models.mixins import TimestampMixin, LogMixin
 
 
 class ControleMensal(db.Model, TimestampMixin, LogMixin):
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    ano = db.Column(db.Integer, nullable=False, server_default=func.extract('year', func.now()))
-    mes = db.Column(db.Integer, nullable=False, server_default=func.extract('month', func.now()))
+    ano = db.Column(db.Integer, nullable=False)
+    mes = db.Column(db.Integer, nullable=False)
 
     projeto_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('projeto.id'), nullable=False)
-    projeto = db.relationship('Projeto')
+    projeto = db.relationship('Projeto', foreign_keys='ControleMensal.projeto_id')
+
+    professor_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('professor.id'), nullable=False)
+    professor = db.relationship('Professor', foreign_keys='ControleMensal.professor_id')
 
     frequencias_semanais = db.relationship('FrequenciaSemanal', back_populates='controle_mensal')
 
