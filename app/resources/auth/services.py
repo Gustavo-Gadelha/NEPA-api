@@ -19,6 +19,10 @@ class AuthService:
         self._db.session.commit()
         return usuario
 
+    def first(self, **filters):
+        stmt = self._db.select(Usuario).filter_by(**filters).limit(1)
+        return self._db.session.scalars(stmt).first()
+
     def find(self, login: str) -> Usuario | None:
         if '@' in login:
             stmt = self._db.select(Usuario).where(Usuario.email == login)

@@ -1,5 +1,6 @@
 from flask_smorest.fields import Upload
 from marshmallow import validates, ValidationError
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from app.config import ALLOWED_EDITAIS_EXTENSIONS
@@ -20,7 +21,7 @@ class EditalArquivoInSchema(ma.Schema):
     arquivo = Upload(format='binary', required=True, allow_none=False)
 
     @validates('arquivo')
-    def validate_arquivo(self, arquivo):
+    def validate_arquivo(self, arquivo: FileStorage, data_key: str) -> None:
         filename = secure_filename(arquivo.filename)
         if '.' not in filename:
             raise ValidationError('Arquivo sem extensão')

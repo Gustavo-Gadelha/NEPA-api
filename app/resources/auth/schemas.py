@@ -1,8 +1,9 @@
-from marshmallow import validates, ValidationError
+from marshmallow import validates, ValidationError, validate
 
 from app.config import MIN_PASSWORD_LENGTH
 from app.extensions import ma
 from app.resources.cursos import curso_service
+from .services import auth_service
 
 
 class LoginInSchema(ma.Schema):
@@ -18,21 +19,27 @@ class RegisterInSchema(ma.Schema):
     confirmar_senha = ma.String(required=True)
     telefone = ma.String(required=True)
     curso_id = ma.UUID(required=True)
-    tipo = ma.String(required=True)
+    tipo = ma.String(required=True, validate=validate.OneOf(['aluno', 'professor']))
 
-    @validates('curso_id')
-    def valitade_curso_id(self, curso_id: str) -> None:
-        if not curso_service.exists(curso_id):
-            raise ValidationError(f"O curso de id: '{curso_id}' não existe")
+    @validates('matricula', 'email', 'telefone')
+    def is_registered(self, value: str, data_key: str) -> None:
+        data_filter = {data_key: value}
+        if auth_service.first(**data_filter):
+            raise ValidationError(f'O valor "{value}" já está cadastrado no banco')
 
     @validates('senha')
-    def validate_senha(self, senha: str) -> None:
+    def validate_senha(self, senha: str, data_key: str) -> None:
         if len(senha) < MIN_PASSWORD_LENGTH:
             raise ValidationError(f'A senha deve ter no mínimo {MIN_PASSWORD_LENGTH} caracteres')
         if not any(c.isdigit() for c in senha):
             raise ValidationError('A senha deve ter pelo menos 1 número')
         if not any(c.isalpha() for c in senha):
             raise ValidationError('A senha deve ter pelo menos 1 letra')
+
+    @validates('curso_id')
+    def valitade_curso_id(self, curso_id: str, data_key: str) -> None:
+        if not curso_service.exists(curso_id):
+            raise ValidationError(f"O curso de id: '{curso_id}' não existe")
 
 
 class RedefinirSenhaInSchema(ma.Schema):

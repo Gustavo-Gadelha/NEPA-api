@@ -10,12 +10,12 @@ class ProjetoInSchema(ma.SQLAlchemySchema):
 
     titulo = ma.auto_field(required=True)
     sumario = ma.auto_field(required=True)
-    status = ma.Enum(StatusProjeto, by_value=False, missing=StatusProjeto.PENDENTE)
+    status = ma.Enum(StatusProjeto, by_value=False, load_default=StatusProjeto.PENDENTE)
 
     titulacao = ma.auto_field(required=True)
     linha_de_pesquisa = ma.auto_field(required=True)
 
-    vagas_ocupadas = ma.auto_field(missing=0)
+    vagas_ocupadas = ma.auto_field(load_default=0)
     vagas_totais = ma.auto_field(required=True)
 
     palavras_chave = ma.auto_field(required=True)
