@@ -13,7 +13,7 @@ class Presenca(db.Model, TimestampMixin, LogMixin):
     presente = db.Column(db.Boolean, default=False, nullable=False)
 
     inscricao_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('inscricao.id'), nullable=False)
-    inscricao = db.relationship('Inscricao', foreign_keys='Presenca.inscricao_id', back_populates='presencas')
+    inscricao = db.relationship('Inscricao', back_populates='presencas')
 
     frequencia_semanal_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('frequencia_semanal.id'), nullable=False)
     frequencia_semanal = db.relationship('FrequenciaSemanal', back_populates='presencas')
