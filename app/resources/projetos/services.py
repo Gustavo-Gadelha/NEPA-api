@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from app.core import CRUDService
 from app.models import Projeto
 
@@ -5,9 +7,8 @@ from app.models import Projeto
 class ProjetoService(CRUDService[Projeto]):
     model = Projeto
 
-    def is_owner(self, projeto_id, usuario_id):
-        projeto = self.get_or_404(projeto_id)
-        return projeto.professor_id == usuario_id
+    def owns_project(self, _id: UUID, professor_id: UUID) -> bool:
+        return self.get_or_404(_id).professor_id == professor_id
 
 
 projeto_service = ProjetoService()

@@ -19,16 +19,20 @@ class ControleList(MethodView):
     @controle_blp.arguments(ControleMensalArgsSchema, location='query', as_kwargs=True)
     @controle_blp.response(200, ControleMensalOutSchema(many=True))
     def get(self, **kwargs):
+        if current_user.autoridade == Autoridade.PROFESSOR:
+            return controle_mensal_service.get_all(**kwargs, professor_id=current_user.id)
+
         return controle_mensal_service.get_all(**kwargs)
 
     @requires_any(Autoridade.PROFESSOR)
     @controle_blp.arguments(ControleMensalInSchema)
     @controle_blp.response(201, ControleMensalOutSchema)
-    def post(self, controle):
-        if not projeto_service.is_owner(controle.projeto_id, current_user.id):
-            raise Forbidden
+    def post(self, controle_mensal):
+        if not projeto_service.owns_project(controle_mensal.projeto_id, current_user.id):
+            raise Forbidden('Este professor não pode acessar este controle mensal')
 
-        return controle_mensal_service.save(controle)
+        controle_mensal.professor_id = current_user.id
+        return controle_mensal_service.save(controle_mensal)
 
 
 @controle_blp.route('/<uuid:controle_id>')
@@ -37,12 +41,15 @@ class ControleDetail(MethodView):
     @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
     @controle_blp.response(200, ControleMensalOutSchema)
     def get(self, controle_id):
+        if current_user.autoridade == Autoridade.PROFESSOR:
+            return controle_mensal_service.one(id=controle_id, professor_id=current_user.id)
+
         return controle_mensal_service.get_or_404(controle_id)
 
     @requires_any(Autoridade.PROFESSOR)
     @controle_blp.response(204)
     def delete(self, controle_id):
-        if not projeto_service.is_owner(controle_id.projeto_id, current_user.id):
-            raise Forbidden
+        if not projeto_service.owns_project(controle_id.projeto_id, current_user.id):
+            raise Forbidden('Este professor não pode acessar este controle mensal')
 
         return controle_mensal_service.delete_by_id(controle_id)
