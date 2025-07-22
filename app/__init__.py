@@ -36,10 +36,10 @@ def create_app(env: str = None) -> Flask:
     register_interceptors(app)
 
     from app.handlers import register_error_handlers
-    register_error_handlers(app)
+    register_error_handlers(app, db)
 
     from app.jwt import register_jwt_callbacks
-    register_jwt_callbacks(jwt_manager)
+    register_jwt_callbacks(app, db, jwt_manager)
 
     from app.resources import register_blueprints
     register_blueprints(api)

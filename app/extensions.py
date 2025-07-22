@@ -11,3 +11,10 @@ ma = Marshmallow()
 jwt_manager = JWTManager()
 argon2 = Argon2()
 api = Api()
+
+from app.handlers import ErrorSchema
+
+# Overrides the default error schema used in OpenAPI docs.
+# This is a workaround, but it's the cleanest way to change
+# the documented structure of default error (422, 500) responses globally in Flask-Smorest
+api.ERROR_SCHEMA = ErrorSchema
