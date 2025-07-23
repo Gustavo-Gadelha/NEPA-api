@@ -55,6 +55,7 @@ select = [
 ignore = [
     "E402", # false positives for local imports
     "E501", # line too long (we let black/formatter handle it)
+    "PLR0915", # too many statements (false positives with handlers.py)
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
