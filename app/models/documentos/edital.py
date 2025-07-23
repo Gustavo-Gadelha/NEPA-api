@@ -16,11 +16,11 @@ class Edital(db.Model, TimestampMixin, LogMixin):
     admin_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('admin.id'), nullable=False)
     admin = db.relationship('Admin', back_populates='editais_criados', foreign_keys='Edital.admin_id')
 
-    def caminho_abs(self, dir: Path = EDITAIS_DIR) -> Path | None:
+    def caminho_abs(self, base_dir: Path = EDITAIS_DIR) -> Path | None:
         if not self.caminho_arquivo:
             return None
 
-        return dir / self.caminho_arquivo
+        return base_dir / self.caminho_arquivo
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

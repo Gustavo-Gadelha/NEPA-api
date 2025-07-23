@@ -26,14 +26,14 @@ class EditalService(CRUDService[Edital]):
 
         return edital
 
-    def update_file(self, _id: UUID, arquivo: FileStorage, dir: Path = EDITAIS_DIR) -> Edital:
+    def update_file(self, _id: UUID, arquivo: FileStorage, base_dir: Path = EDITAIS_DIR) -> Edital:
         edital = self.get_or_404(_id)
         if edital.caminho_arquivo is not None:
             self._delete_file(edital)
 
         nome, ext = self._split_filename(arquivo.filename)
         slug = self._generate_slug(nome)
-        caminho_abs = dir / f'{slug}.{ext}'
+        caminho_abs = base_dir / f'{slug}.{ext}'
         arquivo.save(caminho_abs)
 
         edital.slug = slug
@@ -51,11 +51,11 @@ class EditalService(CRUDService[Edital]):
         name, ext = filename.split('.', 1)
         return name, ext
 
-    def _delete_file(self, edital: Edital, dir: Path = EDITAIS_DIR) -> None:
+    def _delete_file(self, edital: Edital, base_dir: Path = EDITAIS_DIR) -> None:
         if edital.caminho_arquivo is None:
             return
 
-        edital.caminho_abs(dir).unlink(missing_ok=True)
+        edital.caminho_abs(base_dir).unlink(missing_ok=True)
         edital.slug = None
         edital.caminho_arquivo = None
         self._db.session.commit()
