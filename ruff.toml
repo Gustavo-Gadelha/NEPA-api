@@ -30,7 +30,6 @@ exclude = [
     "migrations",
     "uploads",
     "instance",
-    "tests"
 ]
 
 line-length = 120
@@ -66,8 +65,22 @@ unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [lint.extend-per-file-ignores]
-"app/__init__.py" = ["I001"]
-"__init__.py" = ["F401", "PLC0415"]
+"app/__init__.py" = [
+    "I001", # import order (isort) warnings
+]
+
+"__init__.py" = [
+    "F401", # unused imports (re-exports)
+    "PLC0415", # local variable imported but not used (flake8-pie)
+    "F403", # wildcard import used
+]
+
+"test_*.py" = [
+    "S101", # assert used (allowed in tests)
+    "PLC0415", # local variable imported but not used
+    "F821", # undefined name (common in mocks or fixtures)
+    "D", # missing or incomplete docstrings
+]
 
 [format]
 # Unlike Black, use single quotes for strings.
