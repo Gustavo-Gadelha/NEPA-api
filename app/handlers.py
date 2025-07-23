@@ -29,7 +29,7 @@ from werkzeug.exceptions import (
     UnsupportedMediaType,
 )
 
-HTTP_ERROR_MESSAGES = {
+HTTP_ERROR_MESSAGES: dict[int, str] = {
     400: 'Requisição inválida',
     401: 'Acesso não autorizado',
     403: 'Acesso proibido',
