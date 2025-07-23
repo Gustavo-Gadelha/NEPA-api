@@ -37,7 +37,7 @@ class EditalService(CRUDService[Edital]):
         arquivo.save(caminho_abs)
 
         edital.slug = slug
-        edital.caminho_arquivo = caminho_abs.relative_to(dir).name
+        edital.caminho_arquivo = caminho_abs.relative_to(base_dir).name
         self._db.session.commit()
         return edital
 
