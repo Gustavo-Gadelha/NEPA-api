@@ -40,7 +40,7 @@ def register_jwt_callbacks(app: Flask, db: SQLAlchemy, jwt: JWTManager) -> None:
             'nome': usuario.nome,
             'ativo': usuario.ativo,
             'autoridade': usuario.autoridade.value,
-            'tipo': usuario.tipo
+            'tipo': usuario.tipo,
         }
 
     @jwt.user_lookup_error_loader

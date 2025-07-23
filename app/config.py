@@ -7,24 +7,27 @@ from flask.cli import load_dotenv
 
 BASE_DIR: Path = Path(__file__).parent.parent.resolve()
 
-ENV_PATH: Path = BASE_DIR / '.env'
-if not ENV_PATH.exists():
-    raise RuntimeError(f'Arquivo .env não encontrado em {ENV_PATH}')
-
-ENV_LOADED: bool = load_dotenv(ENV_PATH)
-if not ENV_LOADED:
-    raise RuntimeError('As variaveis de ambientes não foram carregadas')
-
-ALLOWED_ANEXOS_EXTENSIONS: set[str] = {'png', 'jpeg', 'jpg'}
-ALLOWED_EDITAIS_EXTENSIONS: set[str] = {'pdf', }
-MAX_FILE_SIZE: int = 8 * 1024 * 1024  # 8 MB
-
 UPLOADS_DIR: Path = BASE_DIR / 'uploads'
 UPLOADS_DIR.mkdir(exist_ok=True)
 
 EDITAIS_DIR: Path = UPLOADS_DIR / 'editais'
 EDITAIS_DIR.mkdir(exist_ok=True)
 
+ENV_PATH = BASE_DIR / '.env'
+if not ENV_PATH.exists():
+    raise RuntimeError(f'Arquivo .env não encontrado em {ENV_PATH}')
+if not load_dotenv(ENV_PATH):
+    raise RuntimeError('Variáveis de ambiente não foram carregadas')
+
+ALLOWED_EDITAIS_EXTENSIONS: set[str] = {
+    'pdf',
+}
+ALLOWED_ANEXOS_EXTENSIONS: set[str] = {
+    'png',
+    'jpeg',
+    'jpg',
+}
+MAX_FILE_SIZE: int = 8 * 1024 * 1024  # 8 MB
 MIN_PASSWORD_LENGTH: int = 8
 
 

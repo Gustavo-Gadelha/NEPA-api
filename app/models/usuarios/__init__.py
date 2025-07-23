@@ -7,5 +7,5 @@ __all__ = [
     'Admin',
     'Aluno',
     'Professor',
-    'Usuario'
+    'Usuario',
 ]

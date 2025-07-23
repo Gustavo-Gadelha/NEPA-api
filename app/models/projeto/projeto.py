@@ -51,9 +51,9 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
 @db.event.listens_for(Projeto, 'after_insert')
 def calcular_data_limite_edicao(mapper, connection, target):
     connection.execute(
-        Projeto.__table__.update().
-        where(Projeto.id == target.id).
-        values(data_limite_edicao=target.criado_em + timedelta(days=7))
+        Projeto.__table__.update()
+        .where(Projeto.id == target.id)
+        .values(data_limite_edicao=target.criado_em + timedelta(days=7))
     )
 
 

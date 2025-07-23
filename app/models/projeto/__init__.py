@@ -5,5 +5,5 @@ from .projeto import Projeto
 __all__ = [
     'Atividade',
     'Inscricao',
-    'Projeto'
+    'Projeto',
 ]

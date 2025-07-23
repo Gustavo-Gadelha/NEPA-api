@@ -18,11 +18,11 @@ routes = {
     '/professores': professor_blp,
     '/projetos': {
         '/': projeto_blp,
-        '/<uuid:projeto_id>/inscricoes': inscricao_blp
+        '/<uuid:projeto_id>/inscricoes': inscricao_blp,
     },
     '/controles': {
         '/': controle_blp,
-        '/<uuid:controle_id>/frequencias': frequencia_blp
+        '/<uuid:controle_id>/frequencias': frequencia_blp,
     },
 }
 
