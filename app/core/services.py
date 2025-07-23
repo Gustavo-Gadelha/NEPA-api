@@ -1,4 +1,4 @@
-from typing import ClassVar, Any
+from typing import Any, ClassVar
 from uuid import UUID
 
 from app.extensions import db

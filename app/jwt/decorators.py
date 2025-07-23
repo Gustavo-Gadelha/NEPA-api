@@ -1,7 +1,7 @@
-from functools import wraps
 from collections.abc import Callable
+from functools import wraps
 
-from flask_jwt_extended import verify_jwt_in_request, current_user
+from flask_jwt_extended import current_user, verify_jwt_in_request
 from werkzeug.exceptions import Forbidden
 
 from app.models.enums import Autoridade

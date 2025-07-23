@@ -1,13 +1,14 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from marshmallow import ValidationError, EXCLUDE
+from marshmallow import EXCLUDE, ValidationError
 from werkzeug.exceptions import Unauthorized
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.resources.alunos import AlunoInSchema
 from app.resources.professores import ProfessorInSchema
-from .schemas import LoginInSchema, RegisterInSchema, TokensOutSchema, RedefinirSenhaInSchema
+
+from .schemas import LoginInSchema, RedefinirSenhaInSchema, RegisterInSchema, TokensOutSchema
 from .services import auth_service
 
 auth_blp = Blueprint('auth', __name__, url_prefix='/auth', description='Modulo de autenticação')

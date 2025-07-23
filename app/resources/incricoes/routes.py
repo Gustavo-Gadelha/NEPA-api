@@ -1,13 +1,14 @@
 from flask.views import MethodView
 from flask_jwt_extended import current_user
 from flask_smorest import Blueprint
-from werkzeug.exceptions import Forbidden, Conflict
+from werkzeug.exceptions import Conflict, Forbidden
 
 from app.jwt import requires_any
 from app.models import Inscricao
 from app.models.enums import Autoridade, StatusProjeto
 from app.resources.projetos import projeto_service
-from .schemas import InscricaoPatchInSchema, InscricaoOutSchema
+
+from .schemas import InscricaoOutSchema, InscricaoPatchInSchema
 from .services import inscricao_service
 
 inscricao_blp = Blueprint('inscricoes', __name__, description='Modulo de inscrições')

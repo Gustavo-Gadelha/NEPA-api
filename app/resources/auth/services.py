@@ -1,11 +1,11 @@
 from typing import Any
 from uuid import UUID
 
-from flask_jwt_extended import create_refresh_token, create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from marshmallow import Schema
-from werkzeug.exceptions import NotFound, BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
-from app.extensions import db, argon2
+from app.extensions import argon2, db
 from app.models import Usuario
 
 

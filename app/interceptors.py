@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_jwt_extended import get_jwt_identity, current_user, verify_jwt_in_request
+from flask_jwt_extended import current_user, get_jwt_identity, verify_jwt_in_request
 from werkzeug.exceptions import Forbidden
 
 

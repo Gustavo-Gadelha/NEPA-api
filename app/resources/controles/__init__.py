@@ -1,13 +1,3 @@
-from .routes import (
-    controle_blp
-)
-
-from .schemas import (
-    ControleMensalInSchema,
-    ControleMensalArgsSchema,
-    ControleMensalOutSchema,
-)
-
-from .services import (
-    controle_mensal_service
-)
+from .routes import controle_blp
+from .schemas import ControleMensalArgsSchema, ControleMensalInSchema, ControleMensalOutSchema
+from .services import controle_mensal_service

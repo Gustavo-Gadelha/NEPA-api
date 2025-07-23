@@ -1,5 +1,5 @@
 from app.core import CRUDService
-from app.models import Presenca, FrequenciaSemanal
+from app.models import FrequenciaSemanal, Presenca
 
 
 class FrequenciaSemanalService(CRUDService[FrequenciaSemanal]):

@@ -2,7 +2,7 @@ import uuid
 
 from app.extensions import db
 from app.models.enums import StatusInscricao
-from app.models.mixins import TimestampMixin, LogMixin
+from app.models.mixins import LogMixin, TimestampMixin
 
 
 class Inscricao(db.Model, TimestampMixin, LogMixin):

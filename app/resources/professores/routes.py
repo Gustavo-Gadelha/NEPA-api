@@ -3,7 +3,8 @@ from flask_smorest import Blueprint
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
-from .schemas import ProfessorOutSchema, ProfessorQueryArgsSchema, ProfessorPatchInSchema
+
+from .schemas import ProfessorOutSchema, ProfessorPatchInSchema, ProfessorQueryArgsSchema
 from .services import professor_service
 
 professor_blp = Blueprint('professores', __name__, url_prefix='/professores', description='Modulo de professors')

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from app.config import EDITAIS_DIR
 from app.extensions import db
-from app.models.mixins import TimestampMixin, LogMixin
+from app.models.mixins import LogMixin, TimestampMixin
 
 
 class Edital(db.Model, TimestampMixin, LogMixin):

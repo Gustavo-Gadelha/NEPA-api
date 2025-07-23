@@ -3,7 +3,8 @@ from flask_smorest import Blueprint
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
-from .schemas import AlunoQueryArgsSchema, AlunoPatchInSchema, AlunoOutSchema
+
+from .schemas import AlunoOutSchema, AlunoPatchInSchema, AlunoQueryArgsSchema
 from .services import aluno_service
 
 aluno_blp = Blueprint('alunos', __name__, url_prefix='/alunos', description='Modulo de alunos')

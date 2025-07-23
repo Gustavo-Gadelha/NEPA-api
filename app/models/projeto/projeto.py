@@ -1,11 +1,11 @@
 import uuid
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import func
 
 from app.extensions import db
 from app.models.enums import StatusProjeto
-from app.models.mixins import TimestampMixin, LogMixin
+from app.models.mixins import LogMixin, TimestampMixin
 
 
 class Projeto(db.Model, TimestampMixin, LogMixin):

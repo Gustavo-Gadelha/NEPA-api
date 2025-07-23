@@ -1,6 +1,4 @@
-from . import enums
-from . import mixins
-
+from . import enums, mixins
 from .common import Curso
 from .documentos import Anexo, Edital, RelatorioBolsista, RelatorioCoordenador
 from .frequencias import ControleMensal, FrequenciaSemanal, Presenca

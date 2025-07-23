@@ -1,32 +1,32 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Any
 
 import marshmallow as ma
-from flask import jsonify, Flask, Response
+from flask import Flask, Response, jsonify
 from flask_jwt_extended.exceptions import JWTDecodeError
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import ValidationError
 from sqlalchemy.exc import (
-    IntegrityError,
-    OperationalError,
     DataError,
+    IntegrityError,
     InterfaceError,
-    NoResultFound,
     MultipleResultsFound,
+    NoResultFound,
+    OperationalError,
     SQLAlchemyError,
 )
 from werkzeug.exceptions import (
     BadRequest,
-    NotFound,
     Conflict,
-    Unauthorized,
     Forbidden,
-    InternalServerError,
     HTTPException,
-    ServiceUnavailable,
-    RequestEntityTooLarge,
-    UnsupportedMediaType,
+    InternalServerError,
     MethodNotAllowed,
+    NotFound,
+    RequestEntityTooLarge,
+    ServiceUnavailable,
+    Unauthorized,
+    UnsupportedMediaType,
 )
 
 HTTP_ERROR_MESSAGES = {

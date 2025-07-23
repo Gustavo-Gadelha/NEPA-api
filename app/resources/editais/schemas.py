@@ -1,5 +1,5 @@
 from flask_smorest.fields import Upload
-from marshmallow import validates, ValidationError
+from marshmallow import ValidationError, validates
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 

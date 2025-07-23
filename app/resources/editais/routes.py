@@ -6,7 +6,8 @@ from werkzeug.exceptions import NotFound
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
-from .schemas import EditalInSchema, EditalArquivoInSchema, EditalOutSchema
+
+from .schemas import EditalArquivoInSchema, EditalInSchema, EditalOutSchema
 from .services import edital_service
 
 edital_blp = Blueprint('editais', __name__, url_prefix='/editais', description='Modulo de editais')

@@ -1,3 +1,1 @@
-from .services import (
-    CRUDService
-)
+from .services import CRUDService

@@ -6,7 +6,8 @@ from werkzeug.exceptions import Forbidden
 from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.resources.controles import controle_mensal_service
-from .schemas import FrequenciaSemanalInSchema, FrequenciaSemanalArgsSchema, FrequenciaSemanalOutSchema
+
+from .schemas import FrequenciaSemanalArgsSchema, FrequenciaSemanalInSchema, FrequenciaSemanalOutSchema
 from .services import frequencia_semanal_service
 
 frequencia_blp = Blueprint('frequencias', __name__, description='Modulo de frequências semanais')

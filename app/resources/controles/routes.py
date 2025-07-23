@@ -6,7 +6,8 @@ from werkzeug.exceptions import Forbidden
 from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.resources.projetos import projeto_service
-from .schemas import ControleMensalInSchema, ControleMensalArgsSchema, ControleMensalOutSchema
+
+from .schemas import ControleMensalArgsSchema, ControleMensalInSchema, ControleMensalOutSchema
 from .services import controle_mensal_service
 
 controle_blp = Blueprint('controles', __name__, description='Modulo de controles mensais de frequências')

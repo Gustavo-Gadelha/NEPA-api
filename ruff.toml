@@ -65,6 +65,7 @@ unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [lint.extend-per-file-ignores]
+"app/__init__.py" = ["I001"]
 "__init__.py" = ["F401", "PLC0415"]
 
 [format]

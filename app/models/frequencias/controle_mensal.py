@@ -1,7 +1,7 @@
 import uuid
 
 from app.extensions import db
-from app.models.mixins import TimestampMixin, LogMixin
+from app.models.mixins import LogMixin, TimestampMixin
 
 
 class ControleMensal(db.Model, TimestampMixin, LogMixin):

@@ -1,8 +1,8 @@
 import uuid
 
 from app.extensions import db
-from app.models.enums import TipoRelatorio, TipoProjeto
-from app.models.mixins import TimestampMixin, LogMixin
+from app.models.enums import TipoProjeto, TipoRelatorio
+from app.models.mixins import LogMixin, TimestampMixin
 
 
 class RelatorioBolsista(db.Model, TimestampMixin, LogMixin):

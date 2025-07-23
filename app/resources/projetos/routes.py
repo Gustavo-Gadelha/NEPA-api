@@ -6,12 +6,8 @@ from werkzeug.exceptions import Forbidden
 from app.jwt import requires_any
 from app.models import Projeto
 from app.models.enums import Autoridade
-from .schemas import (
-    ProjetoInSchema,
-    ProjetoQueryArgsSchema,
-    ProjetoPatchInSchema,
-    ProjetoOutSchema
-)
+
+from .schemas import ProjetoInSchema, ProjetoOutSchema, ProjetoPatchInSchema, ProjetoQueryArgsSchema
 from .services import projeto_service
 
 projeto_blp = Blueprint('projetos', __name__, description='Modulo de projetos')

@@ -3,6 +3,7 @@ from flask_smorest import Blueprint
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
+
 from .schemas import CursoInSchema, CursoOutSchema
 from .services import curso_service
 

@@ -1,8 +1,9 @@
-from marshmallow import validates, ValidationError, validate
+from marshmallow import ValidationError, validate, validates
 
 from app.config import MIN_PASSWORD_LENGTH
 from app.extensions import ma
 from app.resources.cursos import curso_service
+
 from .services import auth_service
 
 
