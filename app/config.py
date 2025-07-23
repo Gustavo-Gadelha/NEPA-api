@@ -28,7 +28,7 @@ EDITAIS_DIR.mkdir(exist_ok=True)
 MIN_PASSWORD_LENGTH: int = 8
 
 
-class _Config(object):
+class _Config:
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
 
     SECRET_KEY: str = os.getenv('SECRET_KEY')

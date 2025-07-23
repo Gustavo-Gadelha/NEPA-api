@@ -1,11 +1,11 @@
-from typing import ClassVar, Type, Optional, Any
+from typing import ClassVar, Any
 from uuid import UUID
 
 from app.extensions import db
 
 
 class CRUDService[M]:
-    model: ClassVar[Type[M]]
+    model: ClassVar[type[M]]
 
     def __init__(self, engine=db):
         self._db = engine
@@ -27,7 +27,7 @@ class CRUDService[M]:
         stmt = self._db.select(self.model).filter_by(**filters)
         return self._db.session.scalars(stmt).one()
 
-    def get(self, _id: UUID) -> Optional[M]:
+    def get(self, _id: UUID) -> M | None:
         return self._db.session.get(self.model, _id)
 
     def get_or_404(self, _id: UUID) -> M:

@@ -1,5 +1,5 @@
 import uuid
-from datetime import timezone, datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 from sqlalchemy import func
 
@@ -59,6 +59,6 @@ def calcular_data_limite_edicao(mapper, connection, target):
 
 @db.event.listens_for(Projeto, 'before_update')
 def verificar_limite_edicao(mapper, connection, target):
-    data_limite = target.data_limite_edicao.replace(tzinfo=timezone.utc)
-    if data_limite < datetime.now(timezone.utc):
+    data_limite = target.data_limite_edicao.replace(tzinfo=UTC)
+    if data_limite < datetime.now(UTC):
         raise ValueError('Este projeto não pode mais ser editado')

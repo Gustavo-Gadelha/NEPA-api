@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Callable
+from collections.abc import Callable
 
 from flask_jwt_extended import verify_jwt_in_request, current_user
 from werkzeug.exceptions import Forbidden

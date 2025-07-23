@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from typing import Any
 
 import marshmallow as ma
@@ -66,7 +66,7 @@ class APIError:
         self.message = message
         self.description = description
         self.errors = errors
-        self.timestamp = datetime.now(timezone.utc)
+        self.timestamp = datetime.now(UTC)
 
     def response(self) -> tuple[Response, int]:
         error_dict = self.schema.dump(self)
