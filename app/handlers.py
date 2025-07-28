@@ -3,6 +3,7 @@ from typing import Any
 
 import marshmallow as ma
 from flask import Flask, Response, jsonify
+from flask_jwt_extended import JWTManager
 from flask_jwt_extended.exceptions import JWTDecodeError
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import ValidationError
@@ -45,9 +46,9 @@ HTTP_ERROR_MESSAGES: dict[int, str] = {
 
 
 class ErrorSchema(ma.Schema):
-    code = ma.fields.Integer(required=False)
+    code = ma.fields.Integer(required=True)
     message = ma.fields.String(required=True)
-    description = ma.fields.String(required=False)
+    description = ma.fields.String(required=True)
     errors = ma.fields.Dict(keys=ma.fields.String(), required=False)
     timestamp = ma.fields.DateTime(required=True)
 
@@ -57,15 +58,15 @@ class APIError:
 
     code: int
     message: str
-    description: str | None
+    description: str
     errors: dict[str, Any]
     timestamp: datetime
 
-    def __init__(self, code: int, message: str, description: str = None, errors: dict[str, Any] = None):
+    def __init__(self, code: int, message: str, description: str = '', errors=None):
         self.code = code
         self.message = message
         self.description = description
-        self.errors = errors
+        self.errors = errors or {}
         self.timestamp = datetime.now(UTC)
 
     def response(self) -> tuple[Response, int]:
@@ -73,7 +74,7 @@ class APIError:
         return jsonify(error_dict), self.code
 
     @classmethod
-    def build(cls, code: int = 500, description: str = None, errors: dict[str, Any] = None) -> 'APIError':
+    def build(cls, code: int = 500, description: str = '', errors: dict[str, Any] = None) -> 'APIError':
         message = HTTP_ERROR_MESSAGES.get(code, 'Erro inesperado')
         return cls(code=code, message=message, description=description, errors=errors)
 
@@ -175,12 +176,6 @@ def register_error_handlers(app: Flask, db: SQLAlchemy) -> None:
         app.logger.warning('Mais de um resultado foi encontrado quando apenas um era esperado: %s', str(error))
         return APIError.build(400).response()
 
-    # JWT token exception
-    @app.errorhandler(JWTDecodeError)
-    def handle_jwt_decode_error(error: JWTDecodeError):
-        app.logger.warning('JWTDecodeError: %s', str(error))
-        return APIError.build(401).response()
-
     # Catch-All HTTP & Generic Errors
     @app.errorhandler(HTTPException)
     def handle_http_exception(error: HTTPException):
@@ -198,3 +193,38 @@ def register_error_handlers(app: Flask, db: SQLAlchemy) -> None:
     def handle_generic_exception(error: Exception):
         app.logger.warning('Exception: %s', str(error))
         return APIError.build(500).response()
+
+
+def register_jwt_error_handlers(app: Flask, jwt: JWTManager) -> None:
+    @app.errorhandler(JWTDecodeError)
+    def handle_jwt_decode_error(error: JWTDecodeError):
+        app.logger.warning('JWTDecodeError: %s', str(error))
+        return APIError.build(401).response()
+
+    @jwt.user_lookup_error_loader
+    def user_lookup_error_callback(jwt_header, jwt_payload):
+        identidade = jwt_payload.get('sub')
+        app.logger.warning(f'Erro ao buscar usuário com UUID: {identidade}')
+        return APIError.build(401, description='Não foi possível localizar o usuário associado a este token').response()
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        identidade = jwt_payload.get('sub')
+        app.logger.info(f'Token expirado para usuário com UUID: {identidade}')
+        return APIError.build(401, description='O token JWT expirou, faça login novamente').response()
+
+    @jwt.unauthorized_loader
+    def unauthorized_token_callback(reason):
+        app.logger.warning(f'Requisição sem token JWT: {reason}')
+        return APIError.build(401, description='Token JWT não encontrado na requisição').response()
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(reason):
+        app.logger.warning(f'Token JWT inválido: {reason}')
+        return APIError.build(401, description='Token JWT inválido na requisição').response()
+
+    @jwt.revoked_token_loader
+    def revoked_token_callback(jwt_header, jwt_payload):
+        identidade = jwt_payload.get('sub')
+        app.logger.warning(f'Token revogado para usuário com UUID: {identidade}')
+        return APIError.build(401, description='Este token foi revogado, faça login novamente').response()

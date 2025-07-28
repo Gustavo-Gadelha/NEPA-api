@@ -5,7 +5,6 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended.exceptions import JWTDecodeError, UserLookupError
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.exceptions import Unauthorized
 
 from app.models.usuarios import Usuario
 
@@ -42,31 +41,3 @@ def register_jwt_callbacks(app: Flask, db: SQLAlchemy, jwt: JWTManager) -> None:
             'autoridade': usuario.autoridade.value,
             'tipo': usuario.tipo,
         }
-
-    @jwt.user_lookup_error_loader
-    def user_lookup_error_callback(jwt_header, jwt_payload):
-        identidade = jwt_payload.get('sub')
-        app.logger.warning(f'Erro ao buscar usuário com UUID: {identidade}')
-        raise Unauthorized('Não foi possível localizar o usuário associado a este token')
-
-    @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload):
-        identidade = jwt_payload.get('sub')
-        app.logger.info(f'Token expirado para usuário com UUID: {identidade}')
-        raise Unauthorized('O token JWT expirou, faça login novamente')
-
-    @jwt.unauthorized_loader
-    def unauthorized_token_callback(reason):
-        app.logger.warning(f'Requisição sem token JWT: {reason}')
-        raise Unauthorized('Token JWT não encontrado na requisição')
-
-    @jwt.invalid_token_loader
-    def invalid_token_callback(reason):
-        app.logger.warning(f'Token JWT inválido: {reason}')
-        raise Unauthorized('Token JWT inválido na requisição')
-
-    @jwt.revoked_token_loader
-    def revoked_token_callback(jwt_header, jwt_payload):
-        identidade = jwt_payload.get('sub')
-        app.logger.warning(f'Token revogado para usuário com UUID: {identidade}')
-        raise Unauthorized('Este token foi revogado, faça login novamente')
