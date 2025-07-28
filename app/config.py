@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
@@ -39,8 +38,8 @@ class _Config:
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
 
     JWT_SECRET_KEY: str = os.getenv('JWT_SECRET_KEY')
-    JWT_ACCESS_TOKEN_EXPIRES: int = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', timedelta(days=1)))
-    JWT_REFRESH_TOKEN_EXPIRES: int = int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', timedelta(days=30)))
+    JWT_ACCESS_TOKEN_EXPIRES: int = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 86400))  # defaults to 1 day
+    JWT_REFRESH_TOKEN_EXPIRES: int = int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', 2592000))  # defaults to 30 days
     JWT_COOKIE_DOMAIN: str = os.getenv('JWT_COOKIE_DOMAIN')
 
     CORS_SUPPORTS_CREDENTIALS = True
