@@ -42,11 +42,11 @@ class _Config:
     JWT_REFRESH_TOKEN_EXPIRES: int = int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES', '2592000'))  # defaults to 30 days
     JWT_COOKIE_DOMAIN: str = os.getenv('JWT_COOKIE_DOMAIN')
 
-    CORS_SUPPORTS_CREDENTIALS = True
+    CORS_SUPPORTS_CREDENTIALS: bool = True
 
-    API_TITLE = os.getenv('API_TITLE')
-    API_VERSION = os.getenv('API_VERSION')
-    OPENAPI_VERSION = os.getenv('OPENAPI_VERSION', '3.0.2')
+    API_TITLE: str = 'NEPA'
+    API_VERSION: str = 'v2'
+    OPENAPI_VERSION: str = os.getenv('OPENAPI_VERSION', '3.0.2')
 
 
 class ProductionConfig(_Config):
