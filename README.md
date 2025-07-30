@@ -16,8 +16,8 @@ permitindo que professores e alunos realizem todas as etapas de forma online
     - [Testes](#testes-testing)
 - [Incializando a API localmente](#incializando-a-api-localmente)
 - [Deploy no Servidor](#deploy-no-servidor)
-- [Configuração do Gunicorn](#configuração-do-gunicorn)
-- [Arquivo de serviço](#arquivo-de-serviço-systemd)
+    - [Configuração do Gunicorn](#configuração-do-gunicorn)
+    - [Arquivo de serviço](#arquivo-de-serviço-systemd)
 
 ## Tecnologias e Dependências
 
@@ -147,14 +147,14 @@ e que o usuário nepa existe.
    sudo journalctl -u nepa-api -f
    ```
 
-## Configuração do Gunicorn
+### Configuração do Gunicorn
 
 A configuração do Gunicorn utilizada pelo serviço encontra-se no arquivo [`gunicorn.conf.py`](./gunicorn.conf.py),
 localizado na raiz do projeto.
 O gunicorn é iniciado automaticamente com essa configuração, desde que seja executado na
 raiz do diretório onde o arquivo está localizado.
 
-## Arquivo de serviço systemd
+### Arquivo de serviço systemd
 
 O serviço `nepa-api`, localizado em `/etc/systemd/system/nepa-api.service`, contém o seguinte:
 
