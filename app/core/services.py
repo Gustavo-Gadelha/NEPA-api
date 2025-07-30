@@ -1,11 +1,13 @@
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Generic, TypeVar
 from uuid import UUID
 
 from app.extensions import db
 
+M = TypeVar('M')
 
-class CRUDService[M]:
-    model: ClassVar[type[M]]
+
+class CRUDService(Generic[M]):
+    model: ClassVar
 
     def __init__(self, engine=db):
         self._db = engine
