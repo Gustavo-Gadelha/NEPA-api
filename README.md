@@ -65,9 +65,6 @@ parâmetro env em create_app() — neste caso, o valor passado como parâmetro t
 
 ## Incializando a API localmente
 
-> [!ALERT]
-> A aplicação não inicia sem este arquivo.
-
 > [!WARNING]
 > Todas as variáveis sensíveis devem ser definidas no arquivo `.env` localizado na raiz do projeto.
 > (exemplo [.env.template](.env.template) fornecido no repositório)
