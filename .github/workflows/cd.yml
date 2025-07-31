@@ -32,4 +32,4 @@ jobs:
             sudo systemctl daemon-reload
             sudo systemctl restart nepa-api
             sudo systemctl status nepa-api --no-pager
-            journalctl -u nepa-api -o short-iso --no-pager
+            journalctl -u nepa-api --since "15 minutes ago" --no-pager
