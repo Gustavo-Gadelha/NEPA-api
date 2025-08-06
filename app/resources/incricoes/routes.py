@@ -57,7 +57,7 @@ class InscricaoDetail(MethodView):
     @requires_any(Autoridade.PROFESSOR)
     @inscricao_blp.arguments(InscricaoPatchInSchema)
     @inscricao_blp.response(200, InscricaoOutSchema)
-    def patch(self, projeto_id, incricao_id, dados):
+    def patch(self, dados, projeto_id, incricao_id):
         if not projeto_service.owns_project(projeto_id, current_user):
             raise Forbidden('Este professor não pode acessar está inscrição')
 

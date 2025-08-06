@@ -1,8 +1,10 @@
 from flask.views import MethodView
+from flask_jwt_extended import current_user
 from flask_smorest import Blueprint
 
 from app.jwt import requires_any
 from app.models.enums import Autoridade
+from app.resources.incricoes import InscricaoOutSchema, inscricao_service
 
 from .schemas import AlunoOutSchema, AlunoPatchInSchema, AlunoQueryArgsSchema
 from .services import aluno_service
@@ -18,6 +20,24 @@ class AlunoList(MethodView):
     @aluno_blp.response(200, AlunoOutSchema(many=True))
     def get(self, **kwargs):
         return aluno_service.get_all(**kwargs)
+
+
+@aluno_blp.route('/me')
+class ProfileMe(MethodView):
+
+    @requires_any(Autoridade.ALUNO)
+    @aluno_blp.response(200, AlunoOutSchema)
+    def get(self):
+        return aluno_service.get(current_user.id)
+
+
+@aluno_blp.route('/me/inscricoes')
+class InscricoesMe(MethodView):
+
+    @requires_any(Autoridade.ALUNO)
+    @aluno_blp.response(200, InscricaoOutSchema(many=True))
+    def get(self):
+        return inscricao_service.get_all(aluno_id=current_user.id)
 
 
 @aluno_blp.route('/<uuid:aluno_id>')

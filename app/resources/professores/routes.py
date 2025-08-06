@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask_jwt_extended import current_user
 from flask_smorest import Blueprint
 
 from app.jwt import requires_any
@@ -18,6 +19,15 @@ class ProfessorList(MethodView):
     @professor_blp.response(200, ProfessorOutSchema(many=True))
     def get(self, **kwargs):
         return professor_service.get_all(**kwargs)
+
+
+@professor_blp.route('/me')
+class ProfileMe(MethodView):
+
+    @requires_any(Autoridade.ALUNO)
+    @professor_blp.response(200, ProfessorOutSchema)
+    def get(self):
+        return professor_service.get(current_user.id)
 
 
 @professor_blp.route('/<uuid:professor_id>')
