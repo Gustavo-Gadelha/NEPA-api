@@ -24,5 +24,6 @@ class InscricaoOutSchema(ma.SQLAlchemySchema):
     id = ma.auto_field()
     status = ma.Enum(StatusInscricao, by_value=True)
     bolsista = ma.auto_field()
-    aluno_id = ma.auto_field()
     projeto_id = ma.auto_field()
+
+    aluno = ma.Nested('AlunoOutSchema', only=('id', 'nome', 'matricula', 'email', 'telefone'))
