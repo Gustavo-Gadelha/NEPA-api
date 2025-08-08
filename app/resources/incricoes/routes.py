@@ -49,7 +49,7 @@ class InscricaoDetail(MethodView):
     @requires_any(Autoridade.PROFESSOR)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def get(self, projeto_id, incricao_id):
-        if not projeto_service.owns_project(projeto_id, current_user):
+        if not projeto_service.owns_project(projeto_id, current_user.id):
             raise Forbidden('Este professor não pode acessar está inscrição')
 
         return inscricao_service.get(incricao_id)
@@ -58,7 +58,7 @@ class InscricaoDetail(MethodView):
     @inscricao_blp.arguments(InscricaoPatchInSchema)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def patch(self, dados, projeto_id, incricao_id):
-        if not projeto_service.owns_project(projeto_id, current_user):
+        if not projeto_service.owns_project(projeto_id, current_user.id):
             raise Forbidden('Este professor não pode acessar está inscrição')
 
         return inscricao_service.patch(incricao_id, dados)
