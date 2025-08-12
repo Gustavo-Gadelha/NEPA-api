@@ -59,7 +59,7 @@ class ProjetoDetail(MethodView):
 
         if current_user.autoridade == Autoridade.ADMIN:
             return projeto_service.delete(projeto)
-        if not current_user.id == projeto.professor_id:
-            raise Forbidden
+        if current_user.id == projeto.professor_id:
+            return projeto_service.delete(projeto)
 
-        return projeto_service.delete(projeto)
+        raise Forbidden
