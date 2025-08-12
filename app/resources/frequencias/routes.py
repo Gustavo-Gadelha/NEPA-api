@@ -21,9 +21,9 @@ class FrequenciaList(MethodView):
     @frequencia_blp.response(200, FrequenciaSemanalOutSchema(many=True))
     def get(self, controle_id, **kwargs):
         if current_user.autoridade == Autoridade.ADMIN:
-            return frequencia_semanal_service.get_all(controle_id=controle_id, **kwargs)
+            return frequencia_semanal_service.get_all(controle_mensal_id=controle_id, **kwargs)
         if controle_mensal_service.owns_controle(controle_id, current_user.id):
-            return frequencia_semanal_service.get_all(controle_id=controle_id, **kwargs)
+            return frequencia_semanal_service.get_all(controle_mensal_id=controle_id, **kwargs)
 
         raise Forbidden
 
@@ -56,5 +56,5 @@ class FrequenciaDetail(MethodView):
     def delete(self, controle_id, frequencia_id):
         if not controle_mensal_service.owns_controle(controle_id, current_user.id):
             raise Forbidden('Este professor não pode acessar essa frequência')
-        
+
         return frequencia_semanal_service.delete_by_id(frequencia_id)
