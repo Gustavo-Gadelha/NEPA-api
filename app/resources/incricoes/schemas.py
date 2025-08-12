@@ -12,8 +12,12 @@ class InscricaoInSchema(ma.SQLAlchemySchema):
     projeto_id = ma.auto_field(required=True)
 
 
+class InscricaoQueryArgsSchema(ma.Schema):
+    status = ma.Enum(StatusInscricao, required=False, by_value=False)
+
+
 class InscricaoPatchInSchema(ma.Schema):
-    status = ma.Enum(StatusInscricao, by_value=False)
+    status = ma.Enum(StatusInscricao, required=True, by_value=False)
 
 
 class InscricaoOutSchema(ma.SQLAlchemySchema):

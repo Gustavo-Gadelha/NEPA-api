@@ -8,7 +8,7 @@ from app.models import Inscricao
 from app.models.enums import Autoridade, StatusProjeto
 from app.resources.projetos import projeto_service
 
-from .schemas import InscricaoOutSchema, InscricaoPatchInSchema
+from .schemas import InscricaoOutSchema, InscricaoPatchInSchema, InscricaoQueryArgsSchema
 from .services import inscricao_service
 
 inscricao_blp = Blueprint('inscricoes', __name__, description='Modulo de inscrições')
@@ -18,12 +18,13 @@ inscricao_blp = Blueprint('inscricoes', __name__, description='Modulo de inscri�
 class InscricaoList(MethodView):
 
     @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
+    @inscricao_blp.arguments(InscricaoQueryArgsSchema, location='query', as_kwargs=True)
     @inscricao_blp.response(200, InscricaoOutSchema(many=True))
-    def get(self, projeto_id):
+    def get(self, projeto_id, **kwargs):
         if not projeto_service.owns_project(projeto_id, current_user.id):
             raise Forbidden('Este professor não pode acessar as incrições deste projeto')
 
-        return inscricao_service.get_all(projeto_id=projeto_id)
+        return inscricao_service.get_all(**kwargs)
 
     @requires_any(Autoridade.ALUNO)
     @inscricao_blp.response(200, InscricaoOutSchema)
