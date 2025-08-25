@@ -1,9 +1,13 @@
+from app.core import auto_managed, ModelManager
 from app.extensions import db
 from app.models.enums import Autoridade
 from app.models.usuarios.usuario import Usuario
 
 
+@auto_managed
 class Aluno(Usuario):
+    objects = ModelManager()
+
     id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('usuario.id'), primary_key=True)
 
     curso_id = db.Column(db.UUID(as_uuid=True), db.ForeignKey('curso.id'), nullable=False)
