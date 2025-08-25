@@ -1,5 +1,5 @@
 from . import enums, mixins
-from .common import Curso
+from .common import Curso, Edital
 from .frequencias import ControleMensal, FrequenciaSemanal, Presenca
 from .projeto import Atividade, Inscricao, Projeto
 from .relatorios import Anexo, RelatorioBolsista, RelatorioCoordenador
