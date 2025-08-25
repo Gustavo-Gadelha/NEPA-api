@@ -1,2 +1,2 @@
-from .manager import auto_managed, Manager, ModelManager
+from .manager import Manager, ModelManager, auto_managed
 from .services import CRUDService

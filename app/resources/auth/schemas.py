@@ -2,9 +2,8 @@ from marshmallow import ValidationError, validate, validates
 
 from app.config import MIN_PASSWORD_LENGTH
 from app.extensions import ma
-from app.resources.cursos import curso_service
-
 from .services import auth_service
+from ...models import Curso
 
 
 class LoginInSchema(ma.Schema):
@@ -39,7 +38,7 @@ class RegisterInSchema(ma.Schema):
 
     @validates('curso_id')
     def valitade_curso_id(self, curso_id: str, data_key: str) -> None:
-        if not curso_service.exists(curso_id):
+        if not Curso.objects.exists(curso_id):
             raise ValidationError(f"O curso de id: '{curso_id}' não existe")
 
 
