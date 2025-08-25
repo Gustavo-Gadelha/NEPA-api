@@ -6,7 +6,6 @@ from werkzeug.exceptions import Forbidden
 from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.resources.projetos import projeto_service
-
 from .schemas import ControleMensalArgsSchema, ControleMensalInSchema, ControleMensalOutSchema
 from .services import controle_mensal_service
 
@@ -50,7 +49,9 @@ class ControleDetail(MethodView):
     @requires_any(Autoridade.PROFESSOR)
     @controle_blp.response(204)
     def delete(self, controle_id):
-        if not projeto_service.owns_project(controle_id.projeto_id, current_user.id):
+        controle = controle_mensal_service.get_or_404(controle_id)
+
+        if not projeto_service.owns_project(controle.projeto_id, current_user.id):
             raise Forbidden('Este professor não pode acessar este controle mensal')
 
         return controle_mensal_service.delete_by_id(controle_id)
