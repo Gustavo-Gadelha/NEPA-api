@@ -4,8 +4,8 @@ from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
 from app.jwt import requires_any
+from app.models import ControleMensal, Usuario
 from app.models.enums import Autoridade
-from app.resources.controles import controle_mensal_service
 
 from .schemas import FrequenciaSemanalArgsSchema, FrequenciaSemanalInSchema, FrequenciaSemanalOutSchema
 from .services import frequencia_semanal_service
@@ -20,9 +20,11 @@ class FrequenciaList(MethodView):
     @frequencia_blp.arguments(FrequenciaSemanalArgsSchema, location='query', as_kwargs=True)
     @frequencia_blp.response(200, FrequenciaSemanalOutSchema(many=True))
     def get(self, controle_id, **kwargs):
+        controle_mensal = ControleMensal.objects.get_or_404(controle_id)
+
         if current_user.autoridade == Autoridade.ADMIN:
             return frequencia_semanal_service.get_all(controle_mensal_id=controle_id, **kwargs)
-        if controle_mensal_service.owns_controle(controle_id, current_user.id):
+        if Usuario.access.is_owner(controle_mensal.professor_id):
             return frequencia_semanal_service.get_all(controle_mensal_id=controle_id, **kwargs)
 
         raise Forbidden
@@ -31,7 +33,9 @@ class FrequenciaList(MethodView):
     @frequencia_blp.arguments(FrequenciaSemanalInSchema)
     @frequencia_blp.response(201, FrequenciaSemanalOutSchema)
     def post(self, frequencia, controle_id):
-        if not controle_mensal_service.owns_controle(controle_id, current_user.id):
+        controle_mensal = ControleMensal.objects.get_or_404(controle_id)
+
+        if not Usuario.access.is_owner(controle_mensal.professor_id):
             raise Forbidden('Este professor não pode acessar esse controle mensal')
 
         frequencia.controle_mensal_id = controle_id
@@ -44,9 +48,11 @@ class FrequenciaDetail(MethodView):
     @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
     @frequencia_blp.response(200, FrequenciaSemanalOutSchema)
     def get(self, controle_id, frequencia_id):
+        controle_mensal = ControleMensal.objects.get_or_404(controle_id)
+
         if current_user.autoridade == Autoridade.ADMIN:
             return frequencia_semanal_service.get_or_404(frequencia_id)
-        if controle_mensal_service.owns_controle(controle_id, current_user.id):
+        if Usuario.access.is_owner(controle_mensal.professor_id):
             return frequencia_semanal_service.get_or_404(frequencia_id)
 
         raise Forbidden
@@ -54,7 +60,9 @@ class FrequenciaDetail(MethodView):
     @requires_any(Autoridade.PROFESSOR)
     @frequencia_blp.response(204)
     def delete(self, controle_id, frequencia_id):
-        if not controle_mensal_service.owns_controle(controle_id, current_user.id):
+        controle_mensal = ControleMensal.objects.get_or_404(controle_id)
+
+        if not Usuario.access.is_owner(controle_mensal.professor_id):
             raise Forbidden('Este professor não pode acessar essa frequência')
 
         return frequencia_semanal_service.delete_by_id(frequencia_id)
