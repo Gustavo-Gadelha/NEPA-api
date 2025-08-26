@@ -15,7 +15,6 @@ class ProjetoInSchema(ma.SQLAlchemySchema):
     titulacao = ma.auto_field(required=True)
     linha_de_pesquisa = ma.auto_field(required=True)
 
-    vagas_ocupadas = ma.auto_field(load_default=0)
     vagas_totais = ma.auto_field(required=True)
 
     palavras_chave = ma.auto_field(required=True)
@@ -54,8 +53,8 @@ class ProjetoOutSchema(ma.SQLAlchemySchema):
     titulacao = ma.auto_field()
     linha_de_pesquisa = ma.auto_field()
 
-    vagas_ocupadas = ma.auto_field()
     vagas_totais = ma.auto_field()
+    vagas_ocupadas = ma.Integer(dump_only=True)
 
     palavras_chave = ma.auto_field()
     localizacao = ma.auto_field()

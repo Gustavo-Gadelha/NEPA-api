@@ -3,12 +3,16 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import func
 
+from app.core import ModelManager, auto_managed
 from app.extensions import db
-from app.models.enums import StatusProjeto
+from app.models.enums import StatusInscricao, StatusProjeto
 from app.models.mixins import LogMixin, TimestampMixin
 
 
+@auto_managed
 class Projeto(db.Model, TimestampMixin, LogMixin):
+    objects = ModelManager()
+
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     titulo = db.Column(db.String(255), nullable=False)
     sumario = db.Column(db.Text, nullable=False)
@@ -17,7 +21,6 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
     titulacao = db.Column(db.String(255), nullable=False)
     linha_de_pesquisa = db.Column(db.String(255), nullable=False)
 
-    vagas_ocupadas = db.Column(db.Integer, nullable=False, default=0)
     vagas_totais = db.Column(db.Integer, nullable=False, default=0)
 
     palavras_chave = db.Column(db.Text, nullable=False)
@@ -43,6 +46,18 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
     curso = db.relationship('Curso')
 
     data_limite_edicao = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+
+    @property
+    def vagas_ocupadas(self):
+        return len([i for i in self.inscricoes if i.status == StatusInscricao.APROVADO])
+
+    @property
+    def tem_vagas(self) -> bool:
+        return self.vagas_ocupadas < self.vagas_totais
+
+    @property
+    def pode_ser_editado(self) -> bool:
+        return not self.data_limite_edicao or self.data_limite_edicao > datetime.utcnow()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
