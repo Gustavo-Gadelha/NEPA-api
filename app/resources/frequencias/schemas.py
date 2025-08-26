@@ -33,7 +33,7 @@ class FrequenciaSemanalOutSchema(ma.SQLAlchemySchema):
     tempo_termino = ma.auto_field()
     descricao = ma.auto_field()
     observacao = ma.auto_field()
-    alunos_presentes = Nested('PresencaOutSchema', many=True)
+    alunos_presentes = Nested('PresencaOutSchema', many=True, attribute="presencas")
 
 
 class PresencaInSchema(ma.SQLAlchemySchema):
