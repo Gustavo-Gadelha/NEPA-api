@@ -68,7 +68,7 @@ class DevelopmentConfig(_Config):
     PROPAGATE_EXCEPTIONS: bool = True
 
     SQLALCHEMY_DATABASE_URI: str = os.getenv('DEVELOPMENT_DATABASE_URI')
-    SQLALCHEMY_ECHO: bool = True
+    SQLALCHEMY_ECHO: bool = os.getenv('SQLALCHEMY_ECHO')
 
     CORS_ORIGINS: list[str] = ['*']
 
