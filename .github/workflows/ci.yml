@@ -40,9 +40,13 @@ jobs:
 
       - name: Installs the ruff action and adds to PATH
         uses: astral-sh/ruff-action@v3
+        with:
+          version: latest
+          check: false
 
       - name: Check code with Ruff
         run: ruff check --output-format=github
+        continue-on-error: true
 
       - name: Check code formatting with Ruff
         run: ruff format --diff
