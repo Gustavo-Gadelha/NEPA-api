@@ -2,7 +2,7 @@ import uuid
 
 from flask_jwt_extended import current_user
 
-from app.core import Manager, ModelManager, auto_managed
+from app.core import Manager, auto_managed
 from app.extensions import db
 from app.models.enums import Autoridade
 from app.models.mixins import TimestampMixin
@@ -20,7 +20,6 @@ class AccessManager(Manager):
 
 @auto_managed
 class Usuario(db.Model, TimestampMixin):
-    objects = ModelManager()
     access = AccessManager()
 
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
