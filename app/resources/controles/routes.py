@@ -1,57 +1,60 @@
-from flask.views import MethodView
 from flask_jwt_extended import current_user
 from flask_smorest import Blueprint
 from werkzeug.exceptions import Forbidden
 
 from app.jwt import requires_any
+from app.models import ControleMensal, Projeto, Usuario
 from app.models.enums import Autoridade
-from app.resources.projetos import projeto_service
+
 from .schemas import ControleMensalArgsSchema, ControleMensalInSchema, ControleMensalOutSchema
-from .services import controle_mensal_service
 
 controle_blp = Blueprint('controles', __name__, description='Modulo de controles mensais de frequências')
 
 
-@controle_blp.route('/')
-class ControleList(MethodView):
+@controle_blp.get('/')
+@requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
+@controle_blp.arguments(ControleMensalArgsSchema, location='query', as_kwargs=True)
+@controle_blp.response(200, ControleMensalOutSchema(many=True))
+def get_all_controle_mensal(**kwargs):
+    if Usuario.access.is_admin():
+        return ControleMensal.objects.filter(**kwargs)
 
-    @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
-    @controle_blp.arguments(ControleMensalArgsSchema, location='query', as_kwargs=True)
-    @controle_blp.response(200, ControleMensalOutSchema(many=True))
-    def get(self, **kwargs):
-        if current_user.autoridade == Autoridade.PROFESSOR:
-            return controle_mensal_service.get_all(**kwargs, professor_id=current_user.id)
-
-        return controle_mensal_service.get_all(**kwargs)
-
-    @requires_any(Autoridade.PROFESSOR)
-    @controle_blp.arguments(ControleMensalInSchema)
-    @controle_blp.response(201, ControleMensalOutSchema)
-    def post(self, controle_mensal):
-        if not projeto_service.owns_project(controle_mensal.projeto_id, current_user.id):
-            raise Forbidden('Este professor não pode acessar este controle mensal')
-
-        controle_mensal.professor_id = current_user.id
-        return controle_mensal_service.save(controle_mensal)
+    return ControleMensal.objects.filter(**kwargs, professor_id=current_user.id)
 
 
-@controle_blp.route('/<uuid:controle_id>')
-class ControleDetail(MethodView):
+@controle_blp.post('/')
+@requires_any(Autoridade.PROFESSOR)
+@controle_blp.arguments(ControleMensalInSchema)
+@controle_blp.response(201, ControleMensalOutSchema)
+def post_controle_mensal(controle_mensal):
+    projeto = Projeto.objects.get_or_404(controle_mensal.projeto_id)
 
-    @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
-    @controle_blp.response(200, ControleMensalOutSchema)
-    def get(self, controle_id):
-        if current_user.autoridade == Autoridade.PROFESSOR:
-            return controle_mensal_service.one(id=controle_id, professor_id=current_user.id)
+    if not Usuario.access.is_owner(projeto.professor_id):
+        raise Forbidden('Este professor não pode acessar este controle mensal')
 
-        return controle_mensal_service.get_or_404(controle_id)
+    controle_mensal.professor_id = current_user.id
+    return ControleMensal.objects.save(controle_mensal)
 
-    @requires_any(Autoridade.PROFESSOR)
-    @controle_blp.response(204)
-    def delete(self, controle_id):
-        controle = controle_mensal_service.get_or_404(controle_id)
 
-        if not projeto_service.owns_project(controle.projeto_id, current_user.id):
-            raise Forbidden('Este professor não pode acessar este controle mensal')
+@controle_blp.get('/<uuid:controle_id>')
+@requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
+@controle_blp.response(200, ControleMensalOutSchema)
+def get_controle_mensal(controle_id):
+    controle_mensal = ControleMensal.objects.get_or_404(controle_id)
 
-        return controle_mensal_service.delete_by_id(controle_id)
+    if not Usuario.access.is_admin() and not Usuario.access.is_owner(controle_mensal.professor_id):
+        raise Forbidden('Este professor não pode acessar este controle mensal')
+
+    return controle_mensal
+
+
+@controle_blp.delete('/<uuid:controle_id>')
+@requires_any(Autoridade.PROFESSOR)
+@controle_blp.response(204)
+def delete_controle_mensal(controle_id):
+    controle_mensal = ControleMensal.objects.get_or_404(controle_id)
+
+    if Usuario.access.is_owner(controle_mensal.professor_id):
+        raise Forbidden('Este professor não pode acessar este controle mensal')
+
+    ControleMensal.objects.delete(controle_mensal)
