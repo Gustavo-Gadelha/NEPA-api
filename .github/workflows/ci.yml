@@ -38,11 +38,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Installs the ruff action and adds to PATH
+      - name: Install ruff without running check or format
         uses: astral-sh/ruff-action@v3
         with:
-          version: latest
-          check: false
+          args: "--version"
 
       - name: Check code with Ruff
         run: ruff check --output-format=github
