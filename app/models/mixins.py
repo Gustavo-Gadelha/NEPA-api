@@ -8,7 +8,7 @@ from app.extensions import db
 @declarative_mixin
 class TimestampMixin:
     criado_em = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
-    atualizado_em = db.Column(db.DateTime(timezone=True), server_onupdate=func.now(), nullable=True)
+    atualizado_em = db.Column(db.DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=True)
 
 
 @declarative_mixin
