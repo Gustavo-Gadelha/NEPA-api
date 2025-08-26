@@ -5,6 +5,7 @@ from app.jwt import requires_any
 from app.models import Aluno
 from app.models.enums import Autoridade
 from app.resources.incricoes import InscricaoOutSchema
+
 from .schemas import AlunoOutSchema, AlunoPatchInSchema, AlunoQueryArgsSchema
 
 aluno_blp = Blueprint('alunos', __name__, url_prefix='/alunos', description='Modulo de alunos')

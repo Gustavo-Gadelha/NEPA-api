@@ -1,4 +1,4 @@
-from app.core import auto_managed, ModelManager
+from app.core import ModelManager, auto_managed
 from app.extensions import db
 from app.models.enums import Autoridade
 from app.models.usuarios.usuario import Usuario

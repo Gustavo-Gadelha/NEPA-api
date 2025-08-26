@@ -5,7 +5,7 @@ from flask import abort
 
 
 def auto_managed(cls):
-    for name, attr in cls.__dict__.items():
+    for _name, attr in cls.__dict__.items():
         if isinstance(attr, Manager):
             attr.attach_to(cls)
     return cls

@@ -2,8 +2,9 @@ from marshmallow import ValidationError, validate, validates
 
 from app.config import MIN_PASSWORD_LENGTH
 from app.extensions import ma
+from app.models import Curso
+
 from .services import auth_service
-from ...models import Curso
 
 
 class LoginInSchema(ma.Schema):

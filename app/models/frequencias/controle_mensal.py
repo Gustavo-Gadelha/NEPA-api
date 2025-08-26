@@ -1,10 +1,14 @@
 import uuid
 
+from app.core import ModelManager, auto_managed
 from app.extensions import db
 from app.models.mixins import LogMixin, TimestampMixin
 
 
+@auto_managed
 class ControleMensal(db.Model, TimestampMixin, LogMixin):
+    objects = ModelManager()
+
     id = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     ano = db.Column(db.Integer, nullable=False)
     mes = db.Column(db.Integer, nullable=False)
