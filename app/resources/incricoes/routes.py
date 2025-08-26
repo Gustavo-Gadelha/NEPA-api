@@ -4,9 +4,8 @@ from flask_smorest import Blueprint
 from werkzeug.exceptions import Conflict, Forbidden
 
 from app.jwt import requires_any
-from app.models import Inscricao
+from app.models import Inscricao, Projeto, Usuario
 from app.models.enums import Autoridade, StatusProjeto
-from app.resources.projetos import projeto_service
 
 from .schemas import InscricaoOutSchema, InscricaoPatchInSchema, InscricaoQueryArgsSchema
 from .services import inscricao_service
@@ -21,7 +20,9 @@ class InscricaoList(MethodView):
     @inscricao_blp.arguments(InscricaoQueryArgsSchema, location='query', as_kwargs=True)
     @inscricao_blp.response(200, InscricaoOutSchema(many=True))
     def get(self, projeto_id, **kwargs):
-        if not projeto_service.owns_project(projeto_id, current_user.id):
+        projeto = Projeto.objects.get_or_404(projeto_id)
+
+        if not Usuario.access.is_owner(projeto.professor_id):
             raise Forbidden('Este professor não pode acessar as incrições deste projeto')
 
         return inscricao_service.get_all(**kwargs)
@@ -29,7 +30,7 @@ class InscricaoList(MethodView):
     @requires_any(Autoridade.ALUNO)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def post(self, projeto_id):
-        projeto = projeto_service.get_or_404(projeto_id)
+        projeto = Projeto.objects.get_or_404(projeto_id)
 
         if not projeto.status == StatusProjeto.EM_ANDAMENTO:
             raise Conflict('Este projeto ainda não está em andamento')
@@ -50,7 +51,9 @@ class InscricaoDetail(MethodView):
     @requires_any(Autoridade.PROFESSOR)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def get(self, projeto_id, incricao_id):
-        if not projeto_service.owns_project(projeto_id, current_user.id):
+        projeto = Projeto.objects.get_or_404(projeto_id)
+
+        if not Usuario.access.is_owner(projeto.professor_id):
             raise Forbidden('Este professor não pode acessar está inscrição')
 
         return inscricao_service.get(incricao_id)
@@ -59,7 +62,9 @@ class InscricaoDetail(MethodView):
     @inscricao_blp.arguments(InscricaoPatchInSchema)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def patch(self, dados, projeto_id, incricao_id):
-        if not projeto_service.owns_project(projeto_id, current_user.id):
+        projeto = Projeto.objects.get_or_404(projeto_id)
+
+        if not Usuario.access.is_owner(projeto.professor_id):
             raise Forbidden('Este professor não pode acessar está inscrição')
 
         return inscricao_service.patch(incricao_id, dados)
