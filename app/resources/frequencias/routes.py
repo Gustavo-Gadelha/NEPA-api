@@ -6,7 +6,6 @@ from werkzeug.exceptions import Forbidden
 from app.jwt import requires_any
 from app.models.enums import Autoridade
 from app.resources.controles import controle_mensal_service
-
 from .schemas import FrequenciaSemanalArgsSchema, FrequenciaSemanalInSchema, FrequenciaSemanalOutSchema
 from .services import frequencia_semanal_service
 
@@ -27,13 +26,9 @@ class FrequenciaList(MethodView):
 
         raise Forbidden
 
-    @requires_any(Autoridade.PROFESSOR)
     @frequencia_blp.arguments(FrequenciaSemanalInSchema)
     @frequencia_blp.response(201, FrequenciaSemanalOutSchema)
     def post(self, frequencia, controle_id):
-        if not controle_mensal_service.owns_controle(controle_id, current_user.id):
-            raise Forbidden('Este professor não pode acessar esse controle mensal')
-
         frequencia.controle_mensal_id = controle_id
         return frequencia_semanal_service.save(frequencia)
 
