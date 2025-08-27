@@ -19,7 +19,6 @@ class FrequenciaSemanalInSchema(ma.SQLAlchemySchema):
 
 class FrequenciaSemanalArgsSchema(ma.Schema):
     realizada_em = ma.Date(required=False)
-    controle_mensal_id = ma.UUID(required=False)
 
 
 class FrequenciaSemanalOutSchema(ma.SQLAlchemySchema):
