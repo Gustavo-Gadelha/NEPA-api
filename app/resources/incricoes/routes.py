@@ -7,7 +7,6 @@ from app.jwt import requires_any
 from app.models import Inscricao
 from app.models.enums import Autoridade, StatusProjeto
 from app.resources.projetos import projeto_service
-
 from .schemas import InscricaoOutSchema, InscricaoPatchInSchema, InscricaoQueryArgsSchema
 from .services import inscricao_service
 
@@ -47,13 +46,15 @@ class InscricaoList(MethodView):
 @inscricao_blp.route('/<incricao_id>')
 class InscricaoDetail(MethodView):
 
-    @requires_any(Autoridade.PROFESSOR)
+    @requires_any(Autoridade.ADMIN, Autoridade.PROFESSOR)
     @inscricao_blp.response(200, InscricaoOutSchema)
     def get(self, projeto_id, incricao_id):
-        if not projeto_service.owns_project(projeto_id, current_user.id):
-            raise Forbidden('Este professor não pode acessar está inscrição')
+        if current_user.autoridade == Autoridade.ADMIN:
+            return inscricao_service.get_or_404(incricao_id)
+        if projeto_service.owns_project(projeto_id, current_user.id):
+            return inscricao_service.get_or_404(incricao_id)
 
-        return inscricao_service.get(incricao_id)
+        raise Forbidden('Este professor não pode acessar está inscrição')
 
     @requires_any(Autoridade.PROFESSOR)
     @inscricao_blp.arguments(InscricaoPatchInSchema)
