@@ -20,10 +20,12 @@ class InscricaoList(MethodView):
     @inscricao_blp.arguments(InscricaoQueryArgsSchema, location='query', as_kwargs=True)
     @inscricao_blp.response(200, InscricaoOutSchema(many=True))
     def get(self, projeto_id, **kwargs):
-        if not projeto_service.owns_project(projeto_id, current_user.id):
-            raise Forbidden('Este professor não pode acessar as incrições deste projeto')
+        if current_user.autoridade == Autoridade.ADMIN:
+            return inscricao_service.get_all(**kwargs)
+        if projeto_service.owns_project(projeto_id, current_user.id):
+            return inscricao_service.get_all(**kwargs)
 
-        return inscricao_service.get_all(**kwargs)
+        raise Forbidden('Este professor não pode acessar as incrições deste projeto')
 
     @requires_any(Autoridade.ALUNO)
     @inscricao_blp.response(200, InscricaoOutSchema)
