@@ -1,3 +1,4 @@
+from flask import abort
 from flask.views import MethodView
 from flask_jwt_extended import current_user
 from flask_smorest import Blueprint
@@ -16,10 +17,14 @@ projeto_blp = Blueprint('projetos', __name__, description='Modulo de projetos')
 @projeto_blp.route('/')
 class ProjetoList(MethodView):
 
+    @requires_any(*Autoridade)
     @projeto_blp.arguments(ProjetoQueryArgsSchema, location='query', as_kwargs=True)
     @projeto_blp.response(200, ProjetoOutSchema(many=True))
     def get(self, **kwargs):
-        return projeto_service.get_all(**kwargs)
+        if current_user and current_user.autoridade == Autoridade.ALUNO:
+            return projeto_service.get_all(**kwargs, mostrar_para_alunos=True)
+        else:
+            return projeto_service.get_all(**kwargs)
 
     @requires_any(Autoridade.PROFESSOR)
     @projeto_blp.arguments(ProjetoInSchema)
@@ -44,7 +49,15 @@ class ProjetoDetail(MethodView):
 
     @projeto_blp.response(200, ProjetoOutSchema)
     def get(self, projeto_id):
-        return projeto_service.get_or_404(projeto_id)
+        projeto = projeto_service.get_or_404(projeto_id)
+
+        if current_user and current_user.autoridade == Autoridade.ALUNO:
+            if projeto.mostrar_para_alunos:
+                return projeto
+
+            abort(404)
+        else:
+            return projeto
 
     @requires_any(Autoridade.ADMIN)
     @projeto_blp.arguments(ProjetoPatchInSchema)
