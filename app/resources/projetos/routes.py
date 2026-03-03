@@ -16,10 +16,14 @@ projeto_blp = Blueprint('projetos', __name__, description='Modulo de projetos')
 @projeto_blp.route('/')
 class ProjetoList(MethodView):
 
+    @requires_any(*Autoridade)
     @projeto_blp.arguments(ProjetoQueryArgsSchema, location='query', as_kwargs=True)
     @projeto_blp.response(200, ProjetoOutSchema(many=True))
     def get(self, **kwargs):
-        return projeto_service.get_all(**kwargs)
+        if current_user and current_user.autoridade == Autoridade.ALUNO:
+            return projeto_service.get_all(**kwargs, mostrar_para_alunos=True)
+        else:
+            return projeto_service.get_all(**kwargs)
 
     @requires_any(Autoridade.PROFESSOR)
     @projeto_blp.arguments(ProjetoInSchema)

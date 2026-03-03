@@ -2,6 +2,7 @@ import uuid
 from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import func
+from sqlalchemy.sql import expression
 
 from app.extensions import db
 from app.models.enums import StatusProjeto
@@ -43,6 +44,7 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
     curso = db.relationship('Curso')
 
     data_limite_edicao = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=True)
+    mostrar_para_alunos = db.Column(db.Boolean, server_default=expression.true(), default=False, nullable=False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
