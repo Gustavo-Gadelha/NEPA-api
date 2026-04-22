@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.sql import expression
 
 from app.extensions import db
-from app.models.enums import StatusProjeto
+from app.models.enums import StatusProjeto, TipoProjeto
 from app.models.mixins import LogMixin, TimestampMixin
 
 
@@ -14,6 +14,7 @@ class Projeto(db.Model, TimestampMixin, LogMixin):
     titulo = db.Column(db.String(255), nullable=False)
     sumario = db.Column(db.Text, nullable=False)
     status = db.Column(db.Enum(StatusProjeto), nullable=False)
+    tipo = db.Column(db.Enum(TipoProjeto), nullable=False)
 
     titulacao = db.Column(db.String(255), nullable=False)
     linha_de_pesquisa = db.Column(db.String(255), nullable=False)
